@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, useMemo } from "react";
+import axios, { AxiosError, AxiosResponse }   from "axios"
 import ReactMarkdown from "react-markdown";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
@@ -8,31 +9,74 @@ import {
   TextField,
   MenuItem,
   Select,
-  Chip
+  Chip,
+  Alert
 } from "@mui/material";
+
 import remarkGfm from 'remark-gfm';
+import {useUserState, useTokenState} from "./../hooks/useUser" 
+import { useForm, SubmitHandler } from "react-hook-form"
 
 type submission = {
   title: string
   medium: string
   tags_in: string[]
   content: string
+  user_id: string
+  comment_ok: boolean
 }
 
 const Simplemde = dynamic(() => import("react-simplemde-editor"), { ssr: false });
 
 export const MarkdownEditor = () => {
-  const [markdownValue, setMarkdownValue] = useState("");
+  const {userState} = useUserState()
+  const {TokenState} = useTokenState()
   const [isPreview, setIsPreview] = useState(false);
+  const [validation, setValidation] = useState("");
   const [submitContent, SetSubmitContent] = useState<submission>({
     title: "",
     medium: "",
     tags_in: [],
     content: "",
+    user_id:  "0",
+    comment_ok: true,
   })
   const [tag, setTag] = useState("")
 
+const create = () =>{
+  console.log(JSON.stringify(submitContent))
+  setValidation("")
+  if(!submitContent.title || !submitContent.content || !submitContent.medium){
+    setValidation("タグ以外の項目は埋めましょう")
+    return ;
+  }
+  if(submitContent.title.length>100){
+    setValidation("タイトルは100文字未満に収めましょう")
+    return ;
+  }
+  if(submitContent.content.length>10000){
+    setValidation("本文は10000文字未満に収めましょう")
+    return ;
+  }
 
+  SetSubmitContent({...submitContent, user_id: userState ? String(userState.id) : "0"})
+  
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Authorization': TokenState ? "Bearer " + TokenState : "",
+}
+
+axios.
+  put("http://localhost:8080/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
+  .then((res: AxiosResponse) => {
+    console.log("seccess")
+  })
+  .catch((err: AxiosError) => {
+    console.log(err)
+  });
+}
+  
   const onChange = (value: any) => {
     SetSubmitContent({...submitContent, content:value});
   };
@@ -80,6 +124,17 @@ export const MarkdownEditor = () => {
 
   return(
     <>
+    <header className="flex mt-2 px-2  w-full h-14">
+
+      <div className="flex ml-auto mt-1 mr-3 gap-4">
+
+      <button className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">下書き保存</button>
+      <button onClick={create} className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">公開保存</button>
+      </div>
+    </header>
+    {validation ? <Alert className="m-4" variant="filled" severity="error">
+      {validation}
+    </Alert> : ""}
     <TextField
     label="タイトル"
     className="w-full px-1 mb-3"
@@ -103,14 +158,14 @@ export const MarkdownEditor = () => {
           SetSubmitContent({...submitContent, medium:e.target.value});
         }}
       >
-        <MenuItem value={1}>漫画</MenuItem>
-        <MenuItem value={2}>漫画雑誌</MenuItem>
-        <MenuItem value={3}>アニメ</MenuItem>
-        <MenuItem value={4}>ラノベ</MenuItem>
-        <MenuItem value={5}>映画</MenuItem>
-        <MenuItem value={6}>ドラマ</MenuItem>
-        <MenuItem value={7}>小説</MenuItem>
-        <MenuItem value={8}>ゲーム</MenuItem>
+        <MenuItem value={"1"}>漫画</MenuItem>
+        <MenuItem value={"2"}>漫画雑誌</MenuItem>
+        <MenuItem value={"3"}>アニメ</MenuItem>
+        <MenuItem value={"4"}>ラノベ</MenuItem>
+        <MenuItem value={"5"}>映画</MenuItem>
+        <MenuItem value={"6"}>ドラマ</MenuItem>
+        <MenuItem value={"7"}>小説</MenuItem>
+        <MenuItem value={"8"}>ゲーム</MenuItem>
       </Select>
     </FormControl>
     <TextField

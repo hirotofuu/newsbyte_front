@@ -7,7 +7,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useCallback, useEffect } from 'react';
-import {useUserState} from "./../hooks/useUser"
+import {useUserState, useTokenState} from "./../hooks/useUser"
 import axios from "./../libs/axios"
 import { AxiosError, AxiosResponse } from 'axios';
 
@@ -15,7 +15,7 @@ export const Header:React.FC = () => {
   const router =useRouter()
   const [tickInterval, setTickInterval] = useState<any>();
   const {userState, setUserState,} = useUserState()
-
+  const {setTokenState,} = useTokenState()
   const logout = () =>{
     axios
     .get('/logout')
@@ -37,7 +37,7 @@ export const Header:React.FC = () => {
         axios
         .get('/refresh_next')
         .then((res: AxiosResponse) => {
-
+          setTokenState(res.data.access_token)
         })
             .catch((error: AxiosError)=> {
               console.log("user is not logged in", error);
@@ -58,6 +58,7 @@ export const Header:React.FC = () => {
       .get('/refresh')
       .then((res: AxiosResponse) => {
         setUserState(res.data);
+        setTokenState(res.data.token)
         toggleRefresh(true);
       })
         .catch(error => {
@@ -69,6 +70,7 @@ export const Header:React.FC = () => {
 
   return(
     <>
+    <h1>{userState?.id}</h1>
     <header className="flex justify-between border-b-2 py-1 px-2 bg-white  w-full h-14">
       <Link href="/" className="mt-1 text-2xl font-bold">
         newsbyte

@@ -6,8 +6,7 @@ import MarkdownEditor from "../components/editor"
 export default function Home() {
   return (
     <>
-    <EDHeader></EDHeader>
-    <MarkdownEditor></MarkdownEditor>
+        <MarkdownEditor></MarkdownEditor>
     </>
   )
 }

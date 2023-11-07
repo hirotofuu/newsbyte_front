@@ -1,5 +1,5 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { currentUserState } from '../atoms/userAtom'
+import { currentUserState, tokenState } from '../atoms/userAtom'
 
 export function useUserState() {
   const userState = useRecoilValue(currentUserState);
@@ -8,5 +8,15 @@ export function useUserState() {
   return {
     userState,
     setUserState,
+  };
+}
+
+export function useTokenState() {
+  const TokenState = useRecoilValue(tokenState);
+  const setTokenState = useSetRecoilState(tokenState);
+
+  return {
+    TokenState,
+    setTokenState,
   };
 }
