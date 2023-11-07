@@ -1,9 +1,9 @@
 export type User={
-  id: string,
-  user_name: string,
-  email: string,
   avatar_image: string,
+  email: string,
+  following_user_ids: number[],
+  id: string,
   profile: string,
   token: string,
-  following_user_ids: number[],
+  user_name: string,
 };

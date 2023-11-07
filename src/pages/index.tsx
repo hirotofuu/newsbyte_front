@@ -10,14 +10,15 @@ import {
   Typography
 } from "@mui/material";
 import ArticleChoice from "./../components/choices/articleChoice"
-
+import {useUserState} from "./../hooks/useUser"
 
 export default function Home() {
   const defaultTheme = createTheme();
+  const {userState} = useUserState()
+  
   return (
     <>
     <ArticleChoice></ArticleChoice>
-    <Header></Header>
     <ThemeProvider theme={defaultTheme}>
       <Box
         sx={{

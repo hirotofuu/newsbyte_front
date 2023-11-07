@@ -15,7 +15,7 @@ import remarkGfm from 'remark-gfm';
 type submission = {
   title: string
   medium: string
-  tags: string[]
+  tags_in: string[]
   content: string
 }
 
@@ -27,7 +27,7 @@ export const MarkdownEditor = () => {
   const [submitContent, SetSubmitContent] = useState<submission>({
     title: "",
     medium: "",
-    tags: [],
+    tags_in: [],
     content: "",
   })
   const [tag, setTag] = useState("")
@@ -124,8 +124,8 @@ export const MarkdownEditor = () => {
     }}
     onKeyDown={e => {
       if (e.keyCode === 13) {
-        if(submitContent.tags.length<5){
-          submitContent.tags.push(tag)
+        if(submitContent.tags_in.length<5){
+          submitContent.tags_in.push(tag)
           setTag("")
         }
       }
@@ -133,14 +133,14 @@ export const MarkdownEditor = () => {
     size="small"
     />
     <ul className="mt-2 flex gap-2 px-1">
-      {submitContent.tags.map((value, index)=>
+      {submitContent.tags_in.map((value, index)=>
       <li key={index}>
         <Chip
         label={value}
         color="primary"
         onDelete={()=>{
-          submitContent.tags.splice(index, 1);
-          SetSubmitContent({...submitContent, tags: submitContent.tags})
+          submitContent.tags_in.splice(index, 1);
+          SetSubmitContent({...submitContent, tags_in: submitContent.tags_in})
         }}
       />
       </li>

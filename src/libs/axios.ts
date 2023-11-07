@@ -1,5 +1,5 @@
 import Axios from 'axios'
- 
+
 const axios = Axios.create({
     baseURL: 'http://localhost:8080',
     headers: {
@@ -8,5 +8,7 @@ const axios = Axios.create({
     },
     withCredentials: true,
 })
+
+
  
 export default axios

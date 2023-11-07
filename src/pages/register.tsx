@@ -53,7 +53,6 @@ export default function SignIn() {
 
   return (
     <>
-    <Header></Header>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />

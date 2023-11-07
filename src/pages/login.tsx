@@ -16,6 +16,7 @@ import {
 import Header from "../components/header"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {useUserState} from "./../hooks/useUser"
 
 function Copyright(props: any) {
   return (
@@ -38,13 +39,18 @@ export default function SignIn() {
     email: "",
     password: ""
   })
+
+  const {userState, setUserState,} = useUserState()
+
   const login = (event: any) => {
     event.preventDefault();
     axios
           .post('/login', JSON.stringify(payload))
           .then((res: AxiosResponse) => {
             console.log("seccess")
-            console.log(res.data)
+            setUserState(res.data)
+            console.log(userState)
+            console.log("誰とも取り替えたくない")
           })
           .catch((err: AxiosError) => {
             console.log(err)
@@ -53,7 +59,6 @@ export default function SignIn() {
 
   return (
     <>
-    <Header></Header>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
