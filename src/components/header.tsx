@@ -15,7 +15,7 @@ export const Header:React.FC = () => {
   const router =useRouter()
   const [tickInterval, setTickInterval] = useState<any>();
   const {userState, setUserState,} = useUserState()
-  const {setTokenState,} = useTokenState()
+  const {setTokenState, TokenState} = useTokenState()
   const logout = () =>{
     axios
     .get('/logout')
@@ -37,12 +37,13 @@ export const Header:React.FC = () => {
         axios
         .get('/refresh_next')
         .then((res: AxiosResponse) => {
+          console.log("your")
           setTokenState(res.data.access_token)
         })
             .catch((error: AxiosError)=> {
               console.log("user is not logged in", error);
             })
-      }, 600000);
+      }, 60000000);
       setTickInterval(i);
     } else {  
       console.log("turning off ticking");
@@ -70,7 +71,6 @@ export const Header:React.FC = () => {
 
   return(
     <>
-    <h1>{userState?.id}</h1>
     <header className="flex justify-between border-b-2 py-1 px-2 bg-white  w-full h-14">
       <Link href="/" className="mt-1 text-2xl font-bold">
         newsbyte
@@ -101,8 +101,8 @@ export const Header:React.FC = () => {
       </>
        :       <button
        className=" font-semibold hover:text-blue-500"
-       onClick={logout}
-       >ログアウト</button>}
+       onClick={()=>{router.push(`/mypage/${userState?.id}`)}}
+       >マイページ</button>}
       <button
        className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-500"
        onClick={()=>{router.push("/create")}}

@@ -10,20 +10,21 @@ import {
   MenuItem,
   Select,
   Chip,
-  Alert
+  Alert,
+  Switch,
 } from "@mui/material";
 
 import remarkGfm from 'remark-gfm';
 import {useUserState, useTokenState} from "./../hooks/useUser" 
-import { useForm, SubmitHandler } from "react-hook-form"
 
 type submission = {
   title: string
-  medium: string
+  medium: number
   tags_in: string[]
   content: string
-  user_id: string
+  user_id: number
   comment_ok: boolean
+  is_open_flag: boolean
 }
 
 const Simplemde = dynamic(() => import("react-simplemde-editor"), { ssr: false });
@@ -35,11 +36,12 @@ export const MarkdownEditor = () => {
   const [validation, setValidation] = useState("");
   const [submitContent, SetSubmitContent] = useState<submission>({
     title: "",
-    medium: "",
+    medium: 0,
     tags_in: [],
     content: "",
-    user_id:  "0",
+    user_id:  1,
     comment_ok: true,
+    is_open_flag: false,
   })
   const [tag, setTag] = useState("")
 
@@ -59,7 +61,49 @@ const create = () =>{
     return ;
   }
 
-  SetSubmitContent({...submitContent, user_id: userState ? String(userState.id) : "0"})
+  SetSubmitContent({...submitContent, is_open_flag:true})
+  SetSubmitContent({...submitContent, user_id: userState ? Number(userState.id) : 0})
+  
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Authorization': TokenState ? "Bearer " + TokenState : "",
+}
+
+axios.
+  put("http://localhost:8080/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
+  .then((res: AxiosResponse) => {
+    console.log("seccess")
+  })
+  .catch((err: AxiosError) => {
+    console.log(err)
+  });
+}
+
+const create_under_save = () =>{
+  console.log(JSON.stringify(submitContent))
+  setValidation("")
+  if(!submitContent.title){
+    setValidation("タイトルは必ず埋めましょう")
+    return ;
+  }
+  if(submitContent.title.length>100){
+    setValidation("タイトルは100文字未満に収めましょう")
+    return ;
+  }
+  if(submitContent.content.length>10000){
+    setValidation("本文は10000文字未満に収めましょう")
+    return ;
+  }
+  if(!submitContent.content){
+    SetSubmitContent({...submitContent, content:"null"})
+  }
+  if(!submitContent.medium){
+    SetSubmitContent({...submitContent, medium:0})
+  }
+
+
+  SetSubmitContent({...submitContent, user_id: userState ? Number(userState.id) : 0})
   
   const headers = {
     'Content-Type': 'application/json',
@@ -125,11 +169,13 @@ axios.
   return(
     <>
     <header className="flex mt-2 px-2  w-full h-14">
-
-      <div className="flex ml-auto mt-1 mr-3 gap-4">
-
-      <button className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">下書き保存</button>
-      <button onClick={create} className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">公開保存</button>
+      <div className="flex ml-auto mt-1 mr-3 gap-1">
+        <button onClick={!submitContent.is_open_flag ? create_under_save : create} className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">{!submitContent.is_open_flag ? "下書き保存" : "公開保存"}</button>
+        <Switch
+        checked={submitContent.is_open_flag}
+        onChange={ ()=> SetSubmitContent({...submitContent, is_open_flag: !submitContent.is_open_flag})}
+        inputProps={{ 'aria-label': 'controlled' }}
+        />
       </div>
     </header>
     {validation ? <Alert className="m-4" variant="filled" severity="error">
@@ -155,17 +201,18 @@ axios.
         label="媒体"
         value={submitContent.medium}
         onChange={e => {
-          SetSubmitContent({...submitContent, medium:e.target.value});
+          SetSubmitContent({...submitContent, medium:Number(e.target.value)});
         }}
       >
-        <MenuItem value={"1"}>漫画</MenuItem>
-        <MenuItem value={"2"}>漫画雑誌</MenuItem>
-        <MenuItem value={"3"}>アニメ</MenuItem>
-        <MenuItem value={"4"}>ラノベ</MenuItem>
-        <MenuItem value={"5"}>映画</MenuItem>
-        <MenuItem value={"6"}>ドラマ</MenuItem>
-        <MenuItem value={"7"}>小説</MenuItem>
-        <MenuItem value={"8"}>ゲーム</MenuItem>
+        <MenuItem value={0}></MenuItem>
+        <MenuItem value={1}>漫画</MenuItem>
+        <MenuItem value={2}>漫画雑誌</MenuItem>
+        <MenuItem value={3}>アニメ</MenuItem>
+        <MenuItem value={4}>ラノベ</MenuItem>
+        <MenuItem value={5}>映画</MenuItem>
+        <MenuItem value={6}>ドラマ</MenuItem>
+        <MenuItem value={7}>小説</MenuItem>
+        <MenuItem value={8}>ゲーム</MenuItem>
       </Select>
     </FormControl>
     <TextField

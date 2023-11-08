@@ -17,6 +17,7 @@ import Header from "../components/header"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useUserState, useTokenState} from "./../hooks/useUser"
+import { useRouter } from 'next/router';
 
 function Copyright(props: any) {
   return (
@@ -42,6 +43,7 @@ export default function SignIn() {
   })
 
   const {userState, setUserState,} = useUserState()
+  const router = useRouter()
 
   const login = (event: any) => {
     event.preventDefault();
@@ -52,6 +54,7 @@ export default function SignIn() {
             setUserState(res.data)
             setTokenState(res.data.token)
             console.log("誰とも取り替えたくない")
+            router.push("/")
           })
           .catch((err: AxiosError) => {
             console.log(err)

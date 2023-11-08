@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-	background-color: rgb(244, 247, 249);		/*ページ全体の背景色*/
-}
 
 .markdown {
   @apply px-1 text-gray-900 leading-normal break-words whitespace-pre-wrap;

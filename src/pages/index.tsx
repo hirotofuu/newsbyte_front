@@ -9,7 +9,6 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import ArticleChoice from "./../components/choices/articleChoice"
 import {useUserState} from "./../hooks/useUser"
 
 export default function Home() {
@@ -18,8 +17,7 @@ export default function Home() {
   
   return (
     <>
-    <ArticleChoice></ArticleChoice>
-    <ThemeProvider theme={defaultTheme}>
+        <ThemeProvider theme={defaultTheme}>
       <Box
         sx={{
           display: 'flex',
