@@ -8,7 +8,7 @@ const ArticleChoice: React.FC<Props> =({article})=>{
 
   return(
     <>
-      <Link href="/">
+      <Link href={`/article/${article?.id}`}>
         <div className="group hover:bg-gray-100 flex p-3 border-b bg-white"  key="hiroto">
           <div className="ml-4">
             <h2 className="text-md font-semibold xl:text-base lg:text-base md:text-base text-sm  text-black line-clamp-4">{article?.title}</h2>

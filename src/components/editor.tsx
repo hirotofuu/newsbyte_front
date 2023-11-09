@@ -1,6 +1,5 @@
 import React, { useState, ChangeEvent, useMemo } from "react";
 import axios, { AxiosError, AxiosResponse }   from "axios"
-import ReactMarkdown from "react-markdown";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
 import {
@@ -14,6 +13,7 @@ import {
   Switch,
 } from "@mui/material";
 
+import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
 import {useUserState, useTokenState} from "./../hooks/useUser" 
 
@@ -124,42 +124,7 @@ axios.
   const onChange = (value: any) => {
     SetSubmitContent({...submitContent, content:value});
   };
-  const H2 = ({ node, ...props }: any) => {
-    return (
-      <div>
-        <h2 id={node.position?.start.line.toString()}>{props.children}</h2>
-      </div>
-    );
-  };
-  const H1 = ({ node, ...props }: any) => {
-    return (
-      <div>
-        <h1 id={node.position?.start.line.toString()}>{props.children}</h1>
-      </div>
-    );
-  };
-
-  const ankerH1Link = ({ node, ...props }: any) => {
-    return (
-      <a
-        className="list-item list-none mb-2 pb-2 border-b hover:text-blue-500"
-        href={"#" + node.position?.start.line.toString()}
-      >
-        {props.children}
-      </a>
-    );
-  };
-
-  const ankeH2rLink = ({ node, ...props }: any) => {
-    return (
-      <a
-        className="list-item list-none mb-2 pb-2 border-b hover:text-blue-500 pl-3"
-        href={"#" + node.position?.start.line.toString()}
-      >
-        {props.children}
-      </a>
-    );
-  };
+ 
 
 
 
@@ -261,25 +226,7 @@ axios.
     </div>
     {!isPreview ? <Simplemde value={submitContent.content} onChange={onChange}/> : 
     <>
-        <div className="p-3 m-10 bg-gray-100 border border-black border-dashed">
-          目次[表示]
-          <ol className="p-2 list-decimal list-inside">
-            <ReactMarkdown
-              allowedElements={["h1", "h2"]}
-              components={{
-                h1: ankerH1Link,
-                h2: ankeH2rLink,
-              }}
-            >
-              {submitContent.content}
-            </ReactMarkdown>
-          </ol>
-        </div>
-
-       <ReactMarkdown remarkPlugins={[remarkGfm]}components={{
-        h2: H2,
-        h1: H1,
-      }} className='markdown'>{submitContent.content}</ReactMarkdown>  
+       <ReactMarkdown remarkPlugins={[remarkGfm]} className='markdown mt-3'>{submitContent.content}</ReactMarkdown>  
     </>
     }
     </>

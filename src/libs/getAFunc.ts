@@ -22,3 +22,25 @@ export async function getUserSaveArticle(userID: string){
     .catch((err: AxiosError) => console.log(err));
     return res;
 }
+
+export async function getOneArticle(id: string){
+    const res=axios
+    .get(`/article/${id}`)
+    .then((response: AxiosResponse) => {
+      console.log(response.data)
+      return response.data;
+    })
+    .catch((err: AxiosError) => console.log(err));
+    return res;
+}
+
+export async function getOneUser(id: string){
+    const res=axios
+    .get(`/one_user/${id}`)
+    .then((response: AxiosResponse) => {
+      console.log(response.data)
+      return response.data;
+    })
+    .catch((err: AxiosError) => console.log(err));
+    return res;
+}
