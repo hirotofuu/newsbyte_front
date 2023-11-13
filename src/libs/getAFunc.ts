@@ -27,7 +27,6 @@ export async function getOneArticle(id: string){
     const res=axios
     .get(`/article/${id}`)
     .then((response: AxiosResponse) => {
-      console.log(response.data)
       return response.data;
     })
     .catch((err: AxiosError) => console.log(err));
@@ -38,7 +37,16 @@ export async function getOneUser(id: string){
     const res=axios
     .get(`/one_user/${id}`)
     .then((response: AxiosResponse) => {
-      console.log(response.data)
+      return response.data;
+    })
+    .catch((err: AxiosError) => console.log(err));
+    return res;
+}
+
+export async function getOneIdNameUser(id_name: string){
+    const res=axios
+    .get(`/one_id_name_user/${id_name}`)
+    .then((response: AxiosResponse) => {
       return response.data;
     })
     .catch((err: AxiosError) => console.log(err));

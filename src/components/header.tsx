@@ -6,67 +6,24 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import { useCallback, useEffect } from 'react';
-import {useUserState, useTokenState} from "./../hooks/useUser"
+import {useUserState} from "./../hooks/useUser"
 import axios from "./../libs/axios"
 import { AxiosError, AxiosResponse } from 'axios';
 
 export const Header:React.FC = () => {
-  const router =useRouter()
-  const [tickInterval, setTickInterval] = useState<any>();
-  const {userState, setUserState,} = useUserState()
-  const {setTokenState, TokenState} = useTokenState()
+  const router =useRouter();
+  const {userState, setUserState,} = useUserState();
+
   const logout = () =>{
     axios
     .get('/logout')
     .then((res: AxiosResponse) => {
       setUserState(null);
     })
-      .catch(error => {
+      .catch((error: AxiosError)=> {
         console.log("logout error happened", error);
       })
-  }
-
-  const toggleRefresh = useCallback((status: boolean) => {
-    console.log("clicked")
-
-    if (status) {
-      console.log("turning on ticking");
-      let i = setInterval(() => {
-
-        axios
-        .get('/refresh_next')
-        .then((res: AxiosResponse) => {
-          console.log("your")
-          setTokenState(res.data.access_token)
-        })
-            .catch((error: AxiosError)=> {
-              console.log("user is not logged in", error);
-            })
-      }, 60000000);
-      setTickInterval(i);
-    } else {  
-      console.log("turning off ticking");
-      console.log("turning off tickInterval", tickInterval);
-      setTickInterval(null);
-      clearInterval(tickInterval);
-    }
-  }, [tickInterval])
-
-  useEffect(() => {
-    if (!userState) {
-      axios
-      .get('/refresh')
-      .then((res: AxiosResponse) => {
-        setUserState(res.data);
-        setTokenState(res.data.token)
-        toggleRefresh(true);
-      })
-        .catch(error => {
-          console.log("user is not logged in", error);
-        })
-    }
-  }, [])
+  };
 
 
   return(

@@ -1,12 +1,4 @@
 import React, { useState, useMemo } from "react";
-import Link from "next/link";
-import SearchIcon from "@mui/icons-material/Search";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import {
-  IconButton,
-  TextField,
-  Typography
-} from "@mui/material";
 
 export const EDHeader:React.FC = () => {
 

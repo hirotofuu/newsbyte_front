@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { NextPage, GetServerSideProps } from 'next';
 import { useState, ChangeEvent, useEffect } from "react";
-import {getUserArticle, getOneUser} from "./../../libs/getAFunc"
+import {getUserArticle, getOneIdNameUser} from "../../libs/getAFunc"
 import { useRouter } from "next/router";
 import ProfileOne from "../../components/profile/profile_one"
-import {useUserState} from "./../../hooks/useUser" 
-import {Article} from "./../../types/article"
-import {User} from "./../../types/user"
+import {useUserState} from "../../hooks/useUser" 
+import {Article} from "../../types/article"
+import {User} from "../../types/user"
 import ArticleChoice from "@/components/choices/articleChoice";
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const userID: any = context.params?.id;
-  const articles: Article[] = await getUserArticle(String(userID))
-  const user: User = await getOneUser(userID)
+  const idName: any = context.params?.id_name;
+  const user: User = await getOneIdNameUser(idName)
+  const articles: Article[] = await getUserArticle(String(user.id))
   return{
     props: {
       articles,
@@ -39,7 +39,7 @@ const Mypage: NextPage<Factor> = ({articles, user}) => {
         <button className="pb-2 border-b-2 border-blue-500">記事</button>
         <button className="pb-2">コメント</button>
       </div>
-      <div className="w-1/2 mr-auto ml-auto">
+      <div className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6  mr-auto ml-auto">
         {articles ?
           articles.map((article: any, index: any)=>{
             return (

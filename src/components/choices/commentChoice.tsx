@@ -1,26 +1,22 @@
 import {useState, useEffect, ChangeEvent, useCallback} from 'react'
 
-import { useRouter } from 'next/router';
+import {Comment} from "./../../types/article"
 import {
   Avatar,
 } from "@mui/material";
 import Link from 'next/link';
 
+type Props ={
+  comment: Comment | null
+}
 
 
 
+const CommentChoice: React.FC<Props> =({comment})=>{
 
-const CommentChoice: React.FC =()=>{
-
-
-
-
-
-    
-  
   return(
     <>
-      <div  className=" bg-white pt-3 pb-3 pl-3" key={"you"}>
+      <div  className=" bg-white pt-3 pb-3 pl-3" key={comment?.id}>
         <div className="flex">
         <Link href={`/`}>
         <Avatar alt="Remy Sharp" src="https://storage.googleapis.com/zenn-user-upload/34de97ca0e3b-20231016.jpeg" />
@@ -28,10 +24,10 @@ const CommentChoice: React.FC =()=>{
 
         <div className="ml-4 w-full">
           
-              <p className="pt-1  text-sm font-medium mr-6"> <Link href={`/`} className="font-semibold">hiroto</Link>  <span className="text-1 font-normal text-gray-500">| 2012/2/3</span></p>
+              <p className="pt-1  text-sm font-medium mr-6"> <Link href={`/user/${comment?.id_name}`} className="font-semibold">{comment?.id_name}</Link>  <span className="text-1 font-normal text-gray-500">| 2012/2/3</span></p>
             
             <div className="mt-2 text-sm ">
-              <p>面白いね</p>
+              <p>{comment?.comment}</p>
             </div>
 
           </div>

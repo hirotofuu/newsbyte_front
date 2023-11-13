@@ -2,18 +2,24 @@ import Link from "next/link";
 import { NextPage, GetServerSideProps } from 'next';
 import { useState, useEffect } from "react";
 import {getOneArticle} from "./../../libs/getAFunc"
-import {useUserState} from "./../../hooks/useUser" 
+import {useUserState, useTokenState} from "./../../hooks/useUser" 
 import {Article} from "./../../types/article"
-import Frame from "../../components/frame/frame"
 import LeftFrame from "../../components/frame/left_frame"
 import RightFrame from "../../components/frame/right_frame"
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
+import {useFetch} from "./../../hooks/useFetch"
+import {putt} from "./../../libs/putFunc"
+import {deletee} from "./../../libs/deleteFunc"
 import {
   Avatar,
   Box,
-  Container
+  Container,
+  TextareaAutosize
 } from "@mui/material";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CommentChoice from "./../../components/choices/commentChoice"
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id: any = context.params?.id;
   const article: any = await getOneArticle(String(id))
@@ -27,6 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 type Factor = {
   article: Article
 }
+
 
 
 const H2 = ({ node, ...props }: any) => {
@@ -66,8 +73,42 @@ const ankeH2rLink = ({ node, ...props }: any) => {
   );
 };
 
+type CommentForm = {
+  user_id: string,
+  article_id: string
+  comment: string
+}
 
 const Mypage: NextPage<Factor> = ({article}) => {
+  const {data: good, error: goodError, mutate: goodMutate} = useFetch(`/good_article/${article.id}`)
+  const {data: comments, error: commentError, mutate: commentMutate} = useFetch(`/article_comments/${article.id}`)
+  const {userState} = useUserState()
+  const {TokenState} = useTokenState()
+  const [commentForm, setCommentForm] = useState<CommentForm>({
+    user_id: userState ? userState.id : "",
+    article_id: article.id,
+    comment: ""
+  });
+  const onGood = async() => {
+    let res: number = await putt(`/user/insert_article_good/${article.id}`, "", TokenState ? TokenState : " ")
+    if (res==1){
+      goodMutate({is_good_flag: !good.is_good_flag, good_num: good.good_num++})
+    }
+  }
+
+  const onGoodDelete = async() => {
+    let res: number = await deletee(`/user/delete_article_goos/${article.id}`, TokenState ? TokenState : " ")
+    if (res==1){
+      goodMutate({is_good_flag: !good.is_good_flag, good_num: good.good_num--})
+    }
+  }
+
+  const onSendComment = async() => {
+    let res: number = await putt(`/user/insert_comment`, commentForm, TokenState ? TokenState : " ")
+    if (res==1){
+      console.log("成功")
+    }
+  }
 
   return (
     <>
@@ -75,24 +116,53 @@ const Mypage: NextPage<Factor> = ({article}) => {
         <LeftFrame>
           <Box className="mb-10">
             <h1 className="mt-4 font-bold text-3xl">{article.title}</h1>
-            <Link href={`/user/${article.user_id}`}>
-              <div className="flex gap-2 mt-6">
+            <div className="mt-3">
+              <button onClick={good && good.is_good_flag ? onGoodDelete : onGood}>
+                <FavoriteIcon className={good && good.is_good_flag ? "text-red-500" : "text-gray-300"}></FavoriteIcon> <span className="text-gray-500 text-sm">{good ? good.good_num: 0}</span> 
+              </button>
+            </div>
+            <Link href={`/user/${article.id_name}`}>
+              <div className="flex gap-2 mt-5">
                   <Avatar className="" alt="Remy Sharp" src="https://storage.googleapis.com/zenn-user-upload/34de97ca0e3b-20231016.jpeg" sx={{ width: 30, height: 30}}/>
                   <h2 className="mt-1 font-semibold">{article.name}</h2>
               </div>
             </Link>
           </Box>
 
-        <ReactMarkdown remarkPlugins={[remarkGfm]}components={{
-          h2: H2,
-          h1: H1,
-        }} className='markdown'>{article.content}</ReactMarkdown>  
-      
+          <ReactMarkdown remarkPlugins={[remarkGfm]}components={{
+            h2: H2,
+            h1: H1,
+          }} className='markdown'>{article.content}</ReactMarkdown>  
+          <div className="mt-16 border-b-2">
+            <button className="mb-4" onClick={good && good.is_good_flag ? onGoodDelete : onGood}>
+              <FavoriteIcon className={good && good.is_good_flag ? "text-red-500" : "text-gray-300"}></FavoriteIcon> <span className="text-gray-500 text-sm">{good ? good.good_num: 0}</span> 
+            </button>
+          </div>
+          <Box className="p-5">
+            <label className="text-sm mb-2 font font-semibold">コメント欄</label>
+            {comments ?
+              comments.map((comment: any, index: any)=>{
+                return (
+                  <CommentChoice comment={comment} key={index}></CommentChoice>
+                )
+              })
+            : ""}
+            <TextareaAutosize
+            className="mt-4 block border-2 w-full resize-none p-1 rounded-md"
+            aria-label="comment"
+            value={commentForm.comment}
+            onChange={e => {
+              setCommentForm({...commentForm, comment:e.target.value});
+            }}
+            placeholder="コメントを書く" />
+            <button onClick={onSendComment}>send</button>
+          </Box>
+
         </LeftFrame>
         <RightFrame>
           <Container className=" sticky top-10">
             <Box className="p-3 rounded-md bg-gray-100">
-              <Link href={`/user/${article.user_id}`} className="flex">
+              <Link href={`/user/${article.id_name}`} className="flex">
                 <Avatar className="" alt="Remy Sharp" src="https://storage.googleapis.com/zenn-user-upload/34de97ca0e3b-20231016.jpeg" sx={{ width: 70, height: 70}}/>
                 <div>
                   <h2 className="ml-4 p-1 text-xl font-semibold">{article.name}</h2> 

@@ -39,7 +39,7 @@ const Mypage: NextPage<Factor> = ({articles}) => {
         <button className="pb-2">コメント</button>
         <button className="pb-2">設定</button>
       </div>
-      <div className="w-1/2 mr-auto ml-auto">
+      <div className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6 mr-auto ml-auto">
         {articles ?
           articles.map((article: any, index: any)=>{
             return (

@@ -1,15 +1,18 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
-import { useSetRecoilState, RecoilRoot, } from 'recoil';
+import { RecoilRoot, } from 'recoil';
 
 import Header  from './../components/header';
+import Auth  from './../components/auth';
 
 export default function App({ Component, pageProps }: AppProps) {
 
   return( 
     <RecoilRoot>
-      <Header></Header>
-      <Component {...pageProps} />
+      <Auth>
+        <Header></Header>
+        <Component {...pageProps} />
+      </Auth>
     </RecoilRoot>
   )
 }
