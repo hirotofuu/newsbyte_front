@@ -1,5 +1,5 @@
 export type Article={
-  id: string,
+  id: number,
   content: string,
   title: string,
   medium: number,
@@ -7,15 +7,21 @@ export type Article={
   id_name: string
   comment_ok: boolean,
   is_open_flag: boolean,
-  tags_out: string,
+  tagss_out: string,
   name: string,
-  avatar: string
+  avatar: string,
+  created_at: string,
+  updated_at: string
 };
 
 export type Comment={
   id: string,
-  comment: string,
-  user_id: string,
+  comment: number,
+  user_id: number,
+  user_name: string,
+  article_id: number,
   name?: string,
-  avatar?: string
+  avatar?: string,
+  created_at: string,
+  updated_at: string
 };

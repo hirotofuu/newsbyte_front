@@ -11,11 +11,14 @@ import remarkGfm from 'remark-gfm';
 import {useFetch} from "./../../hooks/useFetch"
 import {putt} from "./../../libs/putFunc"
 import {deletee} from "./../../libs/deleteFunc"
+import {timee} from "./../../libs/helper"
+import {makeTags} from "./../../libs/helper"
 import {
   Avatar,
   Box,
   Container,
-  TextareaAutosize
+  TextareaAutosize,
+  Chip
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentChoice from "./../../components/choices/commentChoice"
@@ -23,6 +26,7 @@ import CommentChoice from "./../../components/choices/commentChoice"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const id: any = context.params?.id;
   const article: any = await getOneArticle(String(id))
+  
   return{
     props: {
       article,
@@ -74,21 +78,23 @@ const ankeH2rLink = ({ node, ...props }: any) => {
 };
 
 type CommentForm = {
-  user_id: string,
-  article_id: string
+  user_id: number,
+  article_id: number
   comment: string
 }
 
 const Mypage: NextPage<Factor> = ({article}) => {
+  console.log("s")
   const {data: good, error: goodError, mutate: goodMutate} = useFetch(`/good_article/${article.id}`)
   const {data: comments, error: commentError, mutate: commentMutate} = useFetch(`/article_comments/${article.id}`)
   const {userState} = useUserState()
   const {TokenState} = useTokenState()
   const [commentForm, setCommentForm] = useState<CommentForm>({
-    user_id: userState ? userState.id : "",
+    user_id: 0,
     article_id: article.id,
     comment: ""
   });
+  const [tags, setTags] = useState(makeTags(article.tagss_out))
   const onGood = async() => {
     let res: number = await putt(`/user/insert_article_good/${article.id}`, "", TokenState ? TokenState : " ")
     if (res==1){
@@ -104,9 +110,13 @@ const Mypage: NextPage<Factor> = ({article}) => {
   }
 
   const onSendComment = async() => {
+    if(!commentForm.comment || !userState)return 0;
+    setCommentForm({...commentForm , user_id: userState ? userState.id : 0})
+    console.log(commentForm)
     let res: number = await putt(`/user/insert_comment`, commentForm, TokenState ? TokenState : " ")
     if (res==1){
       console.log("成功")
+      commentMutate()
     }
   }
 
@@ -116,17 +126,31 @@ const Mypage: NextPage<Factor> = ({article}) => {
         <LeftFrame>
           <Box className="mb-10">
             <h1 className="mt-4 font-bold text-3xl">{article.title}</h1>
-            <div className="mt-3">
+            <ul className="mt-3">
+            {tags[0] ?
+              tags.map((tag: any, index: any)=>{
+                return (
+                  <li key={index}>
+                    <Chip label={tag}></Chip>
+                  </li>
+                )
+              })
+            : ""}
+            </ul>
+            <div className="mt-3 flex gap-5 text-xs text-gray-500">
+              <p>投稿: {timee(article.created_at)}</p>
+              {article.created_at!=article.updated_at ? <p>編集: {timee(article.updated_at)}</p> : ""}
+            </div>
+            <Link href={`/user/${article.id_name}`}>
+              <div className="flex gap-2 mt-1">
+                  <h2 className="mt-1 font-semibold">{article.name}({article.id_name})</h2>
+              </div>
+            </Link>
+            <div className="mt-6">
               <button onClick={good && good.is_good_flag ? onGoodDelete : onGood}>
                 <FavoriteIcon className={good && good.is_good_flag ? "text-red-500" : "text-gray-300"}></FavoriteIcon> <span className="text-gray-500 text-sm">{good ? good.good_num: 0}</span> 
               </button>
             </div>
-            <Link href={`/user/${article.id_name}`}>
-              <div className="flex gap-2 mt-5">
-                  <Avatar className="" alt="Remy Sharp" src="https://storage.googleapis.com/zenn-user-upload/34de97ca0e3b-20231016.jpeg" sx={{ width: 30, height: 30}}/>
-                  <h2 className="mt-1 font-semibold">{article.name}</h2>
-              </div>
-            </Link>
           </Box>
 
           <ReactMarkdown remarkPlugins={[remarkGfm]}components={{
@@ -155,20 +179,19 @@ const Mypage: NextPage<Factor> = ({article}) => {
               setCommentForm({...commentForm, comment:e.target.value});
             }}
             placeholder="コメントを書く" />
-            <button onClick={onSendComment}>send</button>
+            { userState ? <div className="flex justify-end">
+              <button className="m-1 text-sm  text-gray-600 px-2 border-2 bg-gray-100 rounded-full" onClick={onSendComment}>send</button>
+            </div> : <p>コメントにはログインが必要です</p>} 
           </Box>
 
         </LeftFrame>
         <RightFrame>
           <Container className=" sticky top-10">
             <Box className="p-3 rounded-md bg-gray-100">
-              <Link href={`/user/${article.id_name}`} className="flex">
-                <Avatar className="" alt="Remy Sharp" src="https://storage.googleapis.com/zenn-user-upload/34de97ca0e3b-20231016.jpeg" sx={{ width: 70, height: 70}}/>
-                <div>
-                  <h2 className="ml-4 p-1 text-xl font-semibold">{article.name}</h2> 
+                <Link href={`/user/${article.id_name}`}>
+                  <p className="ml-4 p-1 text-xl font-semibold">{article.name}</p> 
+                </Link>
                   <button className="mb-3 ml-5 p-2 text-xs text-gray-400 border-2 border gray-400 rounded-full bg-white">フォロー</button>
-                </div>
-              </Link>
               <p className="ml-5 text-xs">
               2021年2月よりプログラミングを学び始めました。 JavaScript, React,TypeScript,Next.jsを中心に学習中です。
               </p>

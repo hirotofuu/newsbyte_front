@@ -27,6 +27,7 @@ export async function getOneArticle(id: string){
     const res=axios
     .get(`/article/${id}`)
     .then((response: AxiosResponse) => {
+      console.log(response.data)
       return response.data;
     })
     .catch((err: AxiosError) => console.log(err));
