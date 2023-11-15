@@ -53,3 +53,14 @@ export async function getOneIdNameUser(id_name: string){
     .catch((err: AxiosError) => console.log(err));
     return res;
 }
+
+export async function getFunc(url: string){
+    const res=axios
+    .get(url)
+    .then((response: AxiosResponse) => {
+      console.log(response.data)
+      return response.data;
+    })
+    .catch((err: AxiosError) => console.log(err));
+    return res;
+}

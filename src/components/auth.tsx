@@ -28,7 +28,7 @@ export const Auth:React.FC<Props> = ({children}) => {
             .catch((error: AxiosError)=> {
               console.log("user is not logged in", error);
             })
-      }, 6000000);
+      }, 60000);
       setTickInterval(i);
     } else {  
       console.log("turning off ticking");

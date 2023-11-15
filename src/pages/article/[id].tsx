@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { NextPage, GetServerSideProps } from 'next';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {getOneArticle} from "./../../libs/getAFunc"
 import {useUserState, useTokenState} from "./../../hooks/useUser" 
 import {Article} from "./../../types/article"
@@ -11,14 +11,13 @@ import remarkGfm from 'remark-gfm';
 import {useFetch} from "./../../hooks/useFetch"
 import {putt} from "./../../libs/putFunc"
 import {deletee} from "./../../libs/deleteFunc"
-import {timee} from "./../../libs/helper"
-import {makeTags} from "./../../libs/helper"
+import {timee, makeTags} from "./../../libs/helper"
 import {
-  Avatar,
   Box,
   Container,
   TextareaAutosize,
-  Chip
+  Chip,
+  Button
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentChoice from "./../../components/choices/commentChoice"
@@ -87,7 +86,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
   console.log("s")
   const {data: good, error: goodError, mutate: goodMutate} = useFetch(`/good_article/${article.id}`)
   const {data: comments, error: commentError, mutate: commentMutate} = useFetch(`/article_comments/${article.id}`)
-  const {userState} = useUserState()
+  const {userState, setUserState} = useUserState()
   const {TokenState} = useTokenState()
   const [commentForm, setCommentForm] = useState<CommentForm>({
     user_id: 0,
@@ -119,6 +118,28 @@ const Mypage: NextPage<Factor> = ({article}) => {
       commentMutate()
     }
   }
+
+  const onFollow = async() => {
+    if(!userState)return
+    let res: number = await putt(`/user/insert_follow/${article.user_id}`, "", TokenState ? TokenState : " ")
+    if (res==1){
+      let demo: number[]=[]
+      if(userState.following_user_ids){demo=[...userState.following_user_ids]}
+      demo.push(Number(article.user_id))
+      setUserState({...userState, following_user_ids: demo})
+      console.log(userState.following_user_ids)
+    }
+  }
+  const onDeleteFollow = async() => {
+    if(!userState)return
+    let res: number = await deletee(`/user/delete_follow/${article.user_id}`, TokenState ? TokenState : " ")
+    if (res==1){
+      let demo: number[]=[...userState.following_user_ids]
+      demo = demo.filter((i)=> i != Number(article.user_id))
+      setUserState({...userState, following_user_ids: demo})
+    }
+  }
+
 
   return (
     <>
@@ -187,12 +208,16 @@ const Mypage: NextPage<Factor> = ({article}) => {
         </LeftFrame>
         <RightFrame>
           <Container className=" sticky top-10">
-            <Box className="p-3 rounded-md bg-gray-100">
+            <Box className="p-3  rounded-md bg-gray-100">
                 <Link href={`/user/${article.id_name}`}>
-                  <p className="ml-4 p-1 text-xl font-semibold">{article.name}</p> 
+                  <p className="ml-3 text-xl font-semibold">{article.name}</p> 
                 </Link>
-                  <button className="mb-3 ml-5 p-2 text-xs text-gray-400 border-2 border gray-400 rounded-full bg-white">フォロー</button>
-              <p className="ml-5 text-xs">
+              {!userState ?
+              <Button color="secondary">フォロー</Button> 
+              : userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{String(i)==article.user_id}) ? <Button color="secondary" onClick={onDeleteFollow}>フォロー中</Button> : 
+              <Button color="secondary" onClick={onFollow}>フォロー</Button> :
+              <Button color="secondary" onClick={onFollow}>フォロー</Button>}
+              <p className="text-xs">
               2021年2月よりプログラミングを学び始めました。 JavaScript, React,TypeScript,Next.jsを中心に学習中です。
               </p>
             </Box>

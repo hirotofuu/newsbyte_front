@@ -7,6 +7,4 @@ export type User={
   profile: string,
   token: string,
   user_name: string,
-  followings_count: number,
-  followeds_count: number,
 };

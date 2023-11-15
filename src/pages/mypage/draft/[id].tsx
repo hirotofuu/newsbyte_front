@@ -36,7 +36,7 @@ const Mypage: NextPage<Factor> = ({articles}) => {
       <div className="flex justify-center gap-12 font-semibold border-b">
         <button onClick={()=>{router.push(`/mypage/${userState?.id}`)}}  className="pb-2">記事</button>
         <button className="pb-2 border-b-2 border-blue-500">下書き</button>
-        <button className="pb-2">コメント</button>
+        <button onClick={()=>{router.push(`/mypage/comments/${userState?.id}`)}}  className="pb-2">コメント</button>
         <button className="pb-2">設定</button>
       </div>
       <div className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6 mr-auto ml-auto">
