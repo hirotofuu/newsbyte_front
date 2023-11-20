@@ -13,6 +13,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 export const Header:React.FC = () => {
   const router =useRouter();
   const {userState, setUserState,} = useUserState();
+  const [searchWord, setSearchWord] = useState("")
 
   const logout = () =>{
     axios
@@ -32,7 +33,7 @@ export const Header:React.FC = () => {
       <Link href="/" className="mt-1 text-2xl font-bold">
         newsbyte
       </Link>
-      <form className="mt-1">
+      <section className="mt-1">
         <TextField
           id="search-bar"
           className="text w-96"
@@ -41,11 +42,27 @@ export const Header:React.FC = () => {
           placeholder="検索はいい文明"
           minRows="10"
           size="small"
+          onKeyDown={e => {
+            if (e.keyCode === 13) {
+              router.push({
+                pathname:"/search",   //URL
+                query: {q :searchWord} //検索クエリ
+              });
+            }
+          }}
+          onChange={e => {
+            setSearchWord(e.target.value);
+          }}
         />
-        <IconButton type="submit" aria-label="search">
+        <IconButton onClick={()=>{
+          router.push({
+            pathname:"/search",   //URL
+            query: {q :searchWord} //検索クエリ
+          });
+        }} type="submit" aria-label="search">
           <SearchIcon style={{ fill: "blue" }} />
         </IconButton>
-      </form>
+      </section>
       <div className="flex mt-1 mr-3 gap-4">
       {!userState ? 
       <>

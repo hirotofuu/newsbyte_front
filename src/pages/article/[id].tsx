@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { NextPage, GetServerSideProps } from 'next';
+import { NextPage, GetServerSideProps, GetStaticProps, GetStaticPaths } from 'next';
 import { useState } from "react";
+import { useRouter } from "next/router";
 import {getOneArticle} from "./../../libs/getAFunc"
 import {useUserState, useTokenState} from "./../../hooks/useUser" 
 import {Article} from "./../../types/article"
@@ -22,7 +23,7 @@ import {
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentChoice from "./../../components/choices/commentChoice"
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
   const id: any = context.params?.id;
   const article: any = await getOneArticle(String(id))
   
@@ -30,8 +31,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       article,
     },
+    revalidate: 120
   };
 }
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [], // アプリのビルド時にはパスに何が入るかが分からないので空でOK
+    fallback: 'blocking', // 👈 ポイント
+  };
+};
+
 
 type Factor = {
   article: Article
@@ -83,7 +93,7 @@ type CommentForm = {
 }
 
 const Mypage: NextPage<Factor> = ({article}) => {
-  console.log("s")
+  console.log(2)
   const {data: good, error: goodError, mutate: goodMutate} = useFetch(`/good_article/${article.id}`)
   const {data: comments, error: commentError, mutate: commentMutate} = useFetch(`/article_comments/${article.id}`)
   const {userState, setUserState} = useUserState()
@@ -93,7 +103,8 @@ const Mypage: NextPage<Factor> = ({article}) => {
     article_id: article.id,
     comment: ""
   });
-  const [tags, setTags] = useState(makeTags(article.tagss_out))
+  const router = useRouter()
+  const [tags] = useState(makeTags(article.tagss_out))
   const onGood = async() => {
     let res: number = await putt(`/user/insert_article_good/${article.id}`, "", TokenState ? TokenState : " ")
     if (res==1){
@@ -130,6 +141,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
       console.log(userState.following_user_ids)
     }
   }
+  
   const onDeleteFollow = async() => {
     if(!userState)return
     let res: number = await deletee(`/user/delete_follow/${article.user_id}`, TokenState ? TokenState : " ")
@@ -147,19 +159,24 @@ const Mypage: NextPage<Factor> = ({article}) => {
         <LeftFrame>
           <Box className="mb-10">
             <h1 className="mt-4 font-bold text-3xl">{article.title}</h1>
-            <ul className="mt-3">
+            <ul className="mt-3 flex gap-2">
             {tags[0] ?
               tags.map((tag: any, index: any)=>{
                 return (
                   <li key={index}>
-                    <Chip label={tag}></Chip>
+                    <Chip label={tag} onClick={()=>{
+                      router.push({
+                        pathname:"/search",   //URL
+                        query: {q : tag} //検索クエリ
+                      });
+                    }}></Chip>
                   </li>
                 )
               })
             : ""}
             </ul>
             <div className="mt-3 flex gap-5 text-xs text-gray-500">
-              <p>投稿: {timee(article.created_at)}</p>
+              <p>作成: {timee(article.created_at)}</p>
               {article.created_at!=article.updated_at ? <p>編集: {timee(article.updated_at)}</p> : ""}
             </div>
             <Link href={`/user/${article.id_name}`}>
@@ -167,11 +184,6 @@ const Mypage: NextPage<Factor> = ({article}) => {
                   <h2 className="mt-1 font-semibold">{article.name}({article.id_name})</h2>
               </div>
             </Link>
-            <div className="mt-6">
-              <button onClick={good && good.is_good_flag ? onGoodDelete : onGood}>
-                <FavoriteIcon className={good && good.is_good_flag ? "text-red-500" : "text-gray-300"}></FavoriteIcon> <span className="text-gray-500 text-sm">{good ? good.good_num: 0}</span> 
-              </button>
-            </div>
           </Box>
 
           <ReactMarkdown remarkPlugins={[remarkGfm]}components={{

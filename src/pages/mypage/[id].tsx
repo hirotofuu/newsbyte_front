@@ -1,9 +1,6 @@
-import Link from "next/link";
 import { NextPage, GetServerSideProps } from 'next';
 import { useState, ChangeEvent, useEffect } from "react";
-import axios from '../../libs/axios';
 import {getUserArticle} from "./../../libs/getAFunc"
-import { AxiosError, AxiosResponse } from 'axios';
 import { useRouter } from "next/router";
 import Profile from "../../components/profile/profile"
 import {useUserState} from "./../../hooks/useUser" 

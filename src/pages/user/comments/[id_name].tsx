@@ -1,25 +1,33 @@
 import Link from "next/link";
-import { NextPage, GetServerSideProps } from 'next';
+import { NextPage, GetServerSideProps, GetStaticProps, GetStaticPaths } from 'next';
 import { useState, ChangeEvent, useEffect } from "react";
 import {getUserArticle, getOneIdNameUser, getFunc} from "../../../libs/getAFunc"
 import { useRouter } from "next/router";
 import ProfileOne from "../../../components/profile/profile_one"
-import {useUserState} from "../../../hooks/useUser" 
+import {useFetch} from "./../../../hooks/useFetch"
 import {Comment} from "../../../types/article"
 import {User} from "../../../types/user"
 import CommentChoice from "@/components/choices/commentChoice";
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getStaticProps: GetStaticProps = async (context) => {
   const idName: any = context.params?.id_name;
   const user: User = await getOneIdNameUser(idName)
   const comments: Comment[] = await getFunc(`/user_comments/${user.id}`)
-  console.log(comments)
   return{
     props: {
       comments,
       user
     },
+    revalidate: 120
   };
 }
+
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [], 
+    fallback: 'blocking', 
+  };
+};
 
 type Factor = {
   comments: Comment[] 
@@ -31,11 +39,12 @@ type Factor = {
 
 
 const Mypage: NextPage<Factor> = ({comments, user}) => {
-  const {userState} = useUserState()
+  const {data: followed_user, error: followedError, mutate: followedMutate} = useFetch(`/followed_users/${user.id}`)
+  console.log(followed_user)
   const router = useRouter()
   return (
     <>
-      <ProfileOne user={user}></ProfileOne>
+      <ProfileOne user={user} followed_num={followed_user ? followed_user.length : 0}></ProfileOne>
       <div className="flex justify-center gap-12 font-semibold border-b">
         <button className="pb-2" onClick={()=>{router.push(`/user/${user.id_name}`)}}>記事</button>
         <button className="pb-2 border-b-2 border-blue-500">コメント</button>

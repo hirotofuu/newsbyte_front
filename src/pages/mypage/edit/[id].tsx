@@ -40,6 +40,7 @@ type Factor = {
 
 
 type submission = {
+  id: number
   title: string
   medium: number
   tags_in: string[]
@@ -57,6 +58,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
   const [isPreview, setIsPreview] = useState(false);
   const [validation, setValidation] = useState("");
   const [submitContent, SetSubmitContent] = useState<submission>({
+    id: article.id,
     title: article.title,
     medium: article.medium,
     tags_in: article.tagss_out!="{}" ? makeTags(article.tagss_out) : [],
@@ -65,7 +67,6 @@ const Mypage: NextPage<Factor> = ({article}) => {
     comment_ok: article.comment_ok,
     is_open_flag: article.is_open_flag,
   })
-  console.log(submitContent.is_open_flag)
   const [tag, setTag] = useState("")
 
 const create = () =>{
@@ -94,7 +95,7 @@ const create = () =>{
 }
 
 axios.
-  put("http://localhost:8080/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
+  put("http://localhost:8080/user/update_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
   .then((res: AxiosResponse) => {
     console.log("seccess")
   })
@@ -136,7 +137,7 @@ const create_under_save = () =>{
   }
 
   axios.
-    put("http://localhost:8080/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
+    put("http://localhost:8080/user/update_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
     .then((res: AxiosResponse) => {
       console.log("seccess")
     })

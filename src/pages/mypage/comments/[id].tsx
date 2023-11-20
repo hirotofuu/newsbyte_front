@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { NextPage, GetServerSideProps } from 'next';
-import {getUserSaveArticle, getFunc} from "./../../../libs/getAFunc"
+import {getFunc} from "./../../../libs/getAFunc"
 import Profile from "../../../components/profile/profile"
 import {useUserState} from "./../../../hooks/useUser" 
 import CommentChoice from "@/components/choices/commentChoice";
@@ -42,7 +42,7 @@ const Mypage: NextPage<Factor> = ({comments}) => {
                 comments.map((comment: any, index: any)=>{
                   return (
                     <li className="border-b-2 mt-2" key={index}>
-                      <Link href={`/article/${comment.article_id}`} className="p-2 font-semibold text-sm text-orange-700 hover:text-blue-500">
+                      <Link href={`/article/${comment.article_id}`} className="px-2 font-semibold text-sm text-orange-700 hover:text-blue-500">
                         {comment.article_title}
                       </Link>
                       <CommentChoice comment={comment} key={index}></CommentChoice>

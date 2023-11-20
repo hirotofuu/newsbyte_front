@@ -28,7 +28,7 @@ export const Auth:React.FC<Props> = ({children}) => {
             .catch((error: AxiosError)=> {
               console.log("user is not logged in", error);
             })
-      }, 60000);
+      }, 600000);
       setTickInterval(i);
     } else {  
       console.log("turning off ticking");
@@ -44,6 +44,10 @@ export const Auth:React.FC<Props> = ({children}) => {
       .get('/refresh')
       .then((res: AxiosResponse) => {
         setUserState(res.data);
+        if(!res.data){
+          console.log("yataaaa")
+          return ;
+        }
         setTokenState(res.data.token)
         toggleRefresh(true);
       })

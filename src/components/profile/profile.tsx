@@ -1,22 +1,21 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import {Article} from "../../types/article"
-import {User} from "../../types/user"
 import {
-  Avatar
+  Button
 } from "@mui/material";
-import {useFetch} from "./../../hooks/useFetch"
-import {useUserState, useTokenState} from "../../hooks/useUser"
+import Frame from "./../frame/frame"
+import {useUserState} from "../../hooks/useUser"
 import axios from "../../libs/axios"
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { useRouter } from "next/router";
-import { putt } from "@/libs/putFunc";
-import { deletee } from "@/libs/deleteFunc";
+import {useFetch} from "./../../hooks/useFetch"
+
 
 
 export const Profile:React.FC=()=> {
   const {userState, setUserState}=useUserState()
   const router = useRouter()
+  const {data: followers, error: followersError, mutate: followersMutate} = useFetch(`/followed_users/${userState?.id}`)
   const logout = () =>{
     axios
     .get('/logout')
@@ -34,14 +33,22 @@ export const Profile:React.FC=()=> {
 
   return(
     <>
-      <div className="text-sm pt-10 pb-6 bg-white">
+      <Frame>
           <h1 className="mt-3 mb-1 text-2xl font-bold text-center">{userState?.user_name}</h1>
-          <p className="text-center mb-2">{userState?.id_name}</p>
+          <p className="text-center mb-2">@{userState?.id_name}</p>
           <h1 className="flex gap-4 justify-center mb-2">
-            <p className="text-blue-500">フォロー中:{userState?.following_user_ids ? userState?.following_user_ids  : 0}</p>
+          <div className="flex text-sm">
+            <Button onClick={()=>{
+              router.push(`/follower/${userState?.id}`)
+            }}>フォロワー: {followers ? followers.length: 0}</Button>
+            <Button onClick={()=>{
+              router.push(`/following/${userState?.id}`)
+            }}>フォロー中: {userState?.following_user_ids.length}</Button>
+          </div>
           </h1>
-         <p className="text-center"><Link href="/" className="">プロフィール編集</Link></p> 
-      </div>
+         <p className="text-center text-xs ">{userState?.profile}</p> 
+         <p className="text-center mt-4"><Link href="/mypage/edit_profile" className="">プロフィール編集</Link></p> 
+      </Frame>
      
     </>
      )

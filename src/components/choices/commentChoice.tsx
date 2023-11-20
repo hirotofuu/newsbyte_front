@@ -41,10 +41,12 @@ const CommentChoice: React.FC<Props> =({comment})=>{
       <div  className=" bg-white pt-3 pb-3 pl-3" key={comment?.id}>
         <div className="flex w-full">
 
-        <div className="">
-          
-              <p className="pt-1  text-sm font-medium mr-6"> <Link href={`/user/${comment?.name}`} className="font-semibold">{comment?.name}</Link>  <span className="text-1 font-normal text-gray-500">| {timee(comment ? comment.created_at : "")}</span></p>
-              {userState && userState.id == comment?.user_id ? <button className="mt-3 text-sm text-gray-500" onClick={deleteComment}>削除</button> : ""}
+        <div className ="">
+              <div className="flex mt-1 mb-4 text-xs">
+                <p className="text-sm font-medium mr-6"> <Link href={`/user/${comment?.name}`} className="font-semibold">@{comment?.name}</Link>  <span className="font-normal text-gray-500">| {timee(comment ? comment.created_at : "")}</span></p>
+                {userState && userState.id == comment?.user_id ? <button className=" text-gray-500" onClick={deleteComment}>削除</button> : ""}
+
+              </div>
             <div className="mt-2 text-sm ">
               <p>{comment?.comment}</p>
             </div>

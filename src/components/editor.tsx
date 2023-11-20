@@ -22,7 +22,6 @@ type submission = {
   medium: number
   tags_in: string[]
   content: string
-  user_id: number
   comment_ok: boolean
   is_open_flag: boolean
 }
@@ -39,7 +38,6 @@ export const MarkdownEditor = () => {
     medium: 0,
     tags_in: [],
     content: "",
-    user_id:  1,
     comment_ok: true,
     is_open_flag: false,
   })
@@ -61,9 +59,7 @@ const create = () =>{
     return ;
   }
 
-  SetSubmitContent({...submitContent, is_open_flag:true})
-  SetSubmitContent({...submitContent, user_id: userState ? Number(userState.id) : 0})
-  
+  SetSubmitContent({...submitContent, is_open_flag:true})  
   const headers = {
     'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
@@ -101,9 +97,6 @@ const create_under_save = () =>{
   if(!submitContent.medium){
     SetSubmitContent({...submitContent, medium:0})
   }
-
-
-  SetSubmitContent({...submitContent, user_id: userState ? Number(userState.id) : 0})
   
   const headers = {
     'Content-Type': 'application/json',

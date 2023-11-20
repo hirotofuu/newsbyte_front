@@ -10,7 +10,6 @@ export function putt(url: string, data: any, token: string) {
 
   const res=axios.put('http://localhost:8080' + url, data , {headers: headers, withCredentials: true })
   .then((response: AxiosResponse) => {
-    console.log("yeah")
     return 1
   })
   .catch((err: AxiosError) =>{

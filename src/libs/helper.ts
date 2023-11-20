@@ -1,5 +1,6 @@
 import { formatDistance, format } from "date-fns";
 import { ja } from "date-fns/locale";
+import { useRouter } from "next/router";
 
 export function timee(date: string) {
   let time = formatDistance(new Date(), Date.parse(date), {
@@ -23,3 +24,5 @@ export function makeTags(data: string) {
   result = result.replace("}", "")
   return result.split(',')
 }
+
+

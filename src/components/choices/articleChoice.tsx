@@ -33,13 +33,13 @@ const ArticleChoice: React.FC<Props> =({article})=>{
 
   return(
     <>
-        <div className="group flex p-3 border-b bg-white"  key="hiroto">
+        <div className="group flex py-2 border-b bg-white"  key="hiroto">
             {userState && String(userState.id) == article?.user_id ? 
             <>
             <Link href={`/mypage/edit/${article.id}`}>編集</Link>
             <button className="text-sm text-gray-500" onClick={deleteComment}>削除</button> 
             </>: ""}
-          <div className="ml-4">
+          <div>
             <Link href={`/article/${article?.id}`}>
               <h2 className="text-md font-semibold xl:text-base lg:text-base md:text-base text-sm  text-black line-clamp-4">{article?.title}</h2>
             </Link>

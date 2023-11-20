@@ -1,6 +1,8 @@
 import Header from "../components/header"
 import * as React from 'react';
+import { useRouter } from "next/router";
 import CssBaseline from '@mui/material/CssBaseline';
+import { useState } from "react";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import {
@@ -11,9 +13,12 @@ import {
 } from "@mui/material";
 import {useUserState} from "./../hooks/useUser"
 
+
 export default function Home() {
   const defaultTheme = createTheme();
   const {userState} = useUserState()
+  const [searchWord, setSearchWord] = useState("")
+  const router = useRouter()
   
   return (
     <>
@@ -34,7 +39,7 @@ export default function Home() {
             {'映像作品から漫画、小説までブログサイト「newsbyte」へようこそ'}<br></br>
             このサイトについてはこちらの<Link href="/" className="text-blue-500">リンク</Link>をご覧ください
           </Typography>
-          <form className="mt-10">
+          <section className="mt-10">
               <TextField
                 id="search-bar"
                 className="text w-2/3"
@@ -43,9 +48,17 @@ export default function Home() {
                 placeholder="キーワード検索"
                 minRows="10"
                 size="small"
+                onChange={e => {
+                  setSearchWord(e.target.value);
+                }}
               />
-              <button className="p-1 border-1 border-black bg-gray-300 ml-1">記事を検索</button>
-            </form>
+              <button onClick={()=>{
+                router.push({
+                pathname:"/search",   //URL
+                query: {q :searchWord} //検索クエリ
+                });
+              }}   className="p-1 border-1 border-black bg-gray-300 ml-1">記事を検索</button>
+            </section>
         </Container>
         <Box
           component="footer"

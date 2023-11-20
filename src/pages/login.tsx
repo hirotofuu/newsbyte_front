@@ -47,6 +47,7 @@ export default function SignIn() {
 
   const login = (event: any) => {
     event.preventDefault();
+    console.log(payload)
     axios
           .post('/login', JSON.stringify(payload))
           .then((res: AxiosResponse) => {
