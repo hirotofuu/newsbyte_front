@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { NextPage, GetServerSideProps, GetStaticProps, GetStaticPaths } from 'next';
-import { useState, ChangeEvent, useEffect } from "react";
-import {getUserArticle, getOneIdNameUser, getFunc} from "../../../libs/getAFunc"
+import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+import {getOneIdNameUser, getFunc} from "../../../libs/getAFunc"
 import { useRouter } from "next/router";
 import ProfileOne from "../../../components/profile/profile_one"
 import {useFetch} from "./../../../hooks/useFetch"
 import {Comment} from "../../../types/article"
 import {User} from "../../../types/user"
 import CommentChoice from "@/components/choices/commentChoice";
+import NotFoundItems from "./../../../components/notFound/notFoundItems"
 export const getStaticProps: GetStaticProps = async (context) => {
   const idName: any = context.params?.id_name;
   const user: User = await getOneIdNameUser(idName)
@@ -62,7 +62,7 @@ const Mypage: NextPage<Factor> = ({comments, user}) => {
                     </li>
                   )
                 })
-              : ""}
+              : <NotFoundItems></NotFoundItems>}
       </ul>
       </div>
     </>

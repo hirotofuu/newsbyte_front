@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import {getFunc} from "./../../libs/getAFunc"
 import {User} from "./../../types/user"
 import UserChoice from "@/components/choices/userChoice";
+import NotFoundItems from "./../../components/notFound/notFoundItems"
 export const getStaticProps: GetStaticProps = async (context) => {
   const id: any = context.params?.id;
   const users: User[] = await getFunc(`/following_users/${id}`)
@@ -42,7 +43,7 @@ const Search: NextPage<Factor> = ({users}) => {
               <UserChoice user={user}></UserChoice>
             )
           })
-        : ""}
+        : <NotFoundItems></NotFoundItems>}
       </div>
     </>
   );

@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import {useUserState} from "./../hooks/useUser"
 import axios from "./../libs/axios"
+import {deleteSpaceStr} from "./../libs/helper"
 import { AxiosError, AxiosResponse } from 'axios';
 
 export const Header:React.FC = () => {
@@ -44,6 +45,7 @@ export const Header:React.FC = () => {
           size="small"
           onKeyDown={e => {
             if (e.keyCode === 13) {
+              if(!deleteSpaceStr(searchWord))return;
               router.push({
                 pathname:"/search",   //URL
                 query: {q :searchWord} //検索クエリ
@@ -55,6 +57,7 @@ export const Header:React.FC = () => {
           }}
         />
         <IconButton onClick={()=>{
+          if(!deleteSpaceStr(searchWord))return;
           router.push({
             pathname:"/search",   //URL
             query: {q :searchWord} //検索クエリ

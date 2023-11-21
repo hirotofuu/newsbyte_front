@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 
 
-export async function getUserArticle(userID: string){
+export async function getUserArticle(userID: number){
     const res=axios
     .get(`/user_articles/${userID}`)
     .then((response: AxiosResponse) => {
@@ -34,7 +34,7 @@ export async function getOneArticle(id: string){
     return res;
 }
 
-export async function getOneUser(id: string){
+export async function getOneUser(id: number){
     const res=axios
     .get(`/one_user/${id}`)
     .then((response: AxiosResponse) => {
@@ -44,7 +44,7 @@ export async function getOneUser(id: string){
     return res;
 }
 
-export async function getOneIdNameUser(id_name: string){
+export async function getOneIdNameUser(id_name: number){
     const res=axios
     .get(`/one_id_name_user/${id_name}`)
     .then((response: AxiosResponse) => {

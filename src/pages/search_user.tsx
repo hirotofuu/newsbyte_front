@@ -3,8 +3,10 @@ import { NextPage, GetServerSideProps, GetStaticProps } from 'next';
 import { useState, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/router";
 import {getFunc} from "./../libs/getAFunc"
+import {deleteSpaceStr} from "./../libs/helper"
 import {User} from "../types/user"
 import UserChoice from "@/components/choices/userChoice";
+import NotFoundItems from "@/components/notFound/notFoundItems";
 import {
   TextField,
 } from "@mui/material";
@@ -50,6 +52,7 @@ const Search: NextPage<Factor> = ({users, query}) => {
             }}
           />
           <button onClick={()=>{
+            if(!deleteSpaceStr(searchWord))return 
             router.push({
             pathname:"/search",   //URL
             query: {q :searchWord} //検索クエリ
@@ -76,7 +79,7 @@ const Search: NextPage<Factor> = ({users, query}) => {
               <UserChoice user={user}></UserChoice>
             )
           })
-        : ""}
+        : <NotFoundItems></NotFoundItems>}
       </div>
     </>
   );

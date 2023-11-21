@@ -1,11 +1,9 @@
-import Link from "next/link";
 import { NextPage, GetStaticPaths, GetStaticProps } from 'next';
-import { useState, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/router";
-import {getFunc} from "../../libs/getAFunc"
-import {User} from "../../types/user"
+import NotFoundItems from "./../../components/notFound/notFoundItems"
 import UserChoice from "@/components/choices/userChoice";
 import {useFetch} from "./../../hooks/useFetch"
+
 export const getStaticProps: GetStaticProps = async (context) => {
   const id: any = context.params?.id;
   return{
@@ -43,7 +41,7 @@ const Search: NextPage<Factor> = ({id}) => {
               <UserChoice user={user}></UserChoice>
             )
           })
-        : ""}
+        : <NotFoundItems></NotFoundItems>}
       </div>
     </>
   );

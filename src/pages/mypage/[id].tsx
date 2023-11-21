@@ -1,14 +1,14 @@
 import { NextPage, GetServerSideProps } from 'next';
-import { useState, ChangeEvent, useEffect } from "react";
 import {getUserArticle} from "./../../libs/getAFunc"
 import { useRouter } from "next/router";
 import Profile from "../../components/profile/profile"
 import {useUserState} from "./../../hooks/useUser" 
 import {Article} from "./../../types/article"
 import ArticleChoice from "@/components/choices/articleChoice";
+import NotFoundItems from "./../../components/notFound/notFoundItems"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userID: any = context.params?.id;
-  const articles: any = await getUserArticle(String(userID))
+  const articles: any = await getUserArticle(userID)
   return{
     props: {
       articles,
@@ -43,7 +43,7 @@ const Mypage: NextPage<Factor> = ({articles}) => {
               <ArticleChoice article={article} key={index}></ArticleChoice>
             )
           })
-        : ""}
+        : <NotFoundItems></NotFoundItems>}
       </div>
     </>
   );

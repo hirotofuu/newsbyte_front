@@ -5,6 +5,7 @@ import {useUserState} from "./../../../hooks/useUser"
 import {Article} from "./../../../types/article"
 import ArticleChoice from "@/components/choices/articleChoice";
 import { useRouter } from "next/router";
+import NotFoundItems from "./../../../components/notFound/notFoundItems"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userID: any = context.params?.id;
   const articles: any = await getUserSaveArticle(String(userID))
@@ -42,7 +43,7 @@ const Mypage: NextPage<Factor> = ({articles}) => {
               <ArticleChoice article={article} key={index}></ArticleChoice>
             )
           })
-        : ""}
+        : <NotFoundItems></NotFoundItems>}
       </div>
     </>
   );

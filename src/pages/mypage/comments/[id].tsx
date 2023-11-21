@@ -5,6 +5,7 @@ import Profile from "../../../components/profile/profile"
 import {useUserState} from "./../../../hooks/useUser" 
 import CommentChoice from "@/components/choices/commentChoice";
 import { useRouter } from "next/router";
+import NotFoundItems from "./../../../components/notFound/notFoundItems"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userID: any = context.params?.id;
   const comments: Comment[] = await getFunc(`/user_comments/${userID}`)
@@ -49,7 +50,7 @@ const Mypage: NextPage<Factor> = ({comments}) => {
                     </li>
                   )
                 })
-              : ""}
+              : <NotFoundItems></NotFoundItems>}
       </ul>
       </div>
     </>

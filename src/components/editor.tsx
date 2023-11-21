@@ -16,6 +16,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
 import {useUserState, useTokenState} from "./../hooks/useUser" 
+import {deleteSpaceStr} from "./../libs/helper"
 
 type submission = {
   title: string
@@ -46,7 +47,7 @@ export const MarkdownEditor = () => {
 const create = () =>{
   console.log(JSON.stringify(submitContent))
   setValidation("")
-  if(!submitContent.title || !submitContent.content || !submitContent.medium){
+  if(!deleteSpaceStr(submitContent.title) || !deleteSpaceStr(submitContent.content) || !submitContent.medium){
     setValidation("タグ以外の項目は埋めましょう")
     return ;
   }
@@ -79,7 +80,8 @@ axios.
 const create_under_save = () =>{
   console.log(JSON.stringify(submitContent))
   setValidation("")
-  if(!submitContent.title){
+  console.log(deleteSpaceStr(submitContent.title))
+  if(!deleteSpaceStr(submitContent.title)){
     setValidation("タイトルは必ず埋めましょう")
     return ;
   }
@@ -184,8 +186,8 @@ axios.
     }}
     onKeyDown={e => {
       if (e.keyCode === 13) {
-        if(submitContent.tags_in.length<5){
-          submitContent.tags_in.push(tag)
+        if(deleteSpaceStr(tag) && submitContent.tags_in.length<5){
+          submitContent.tags_in.push(deleteSpaceStr(tag))
           setTag("")
         }
       }

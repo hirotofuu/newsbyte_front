@@ -43,7 +43,7 @@ export const Profile:React.FC=()=> {
             }}>フォロワー: {followers ? followers.length: 0}</Button>
             <Button onClick={()=>{
               router.push(`/following/${userState?.id}`)
-            }}>フォロー中: {userState?.following_user_ids.length}</Button>
+            }}>フォロー中: {userState?.following_user_ids ? userState?.following_user_ids.length : 0}</Button>
           </div>
           </h1>
          <p className="text-center text-xs ">{userState?.profile}</p> 

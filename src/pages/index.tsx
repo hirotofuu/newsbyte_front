@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useRouter } from "next/router";
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState } from "react";
+import {deleteSpaceStr} from "./../libs/helper"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import {
@@ -11,12 +12,10 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import {useUserState} from "./../hooks/useUser"
 
 
 export default function Home() {
   const defaultTheme = createTheme();
-  const {userState} = useUserState()
   const [searchWord, setSearchWord] = useState("")
   const router = useRouter()
   
@@ -53,6 +52,7 @@ export default function Home() {
                 }}
               />
               <button onClick={()=>{
+              if(!deleteSpaceStr(searchWord))return;
                 router.push({
                 pathname:"/search",   //URL
                 query: {q :searchWord} //検索クエリ

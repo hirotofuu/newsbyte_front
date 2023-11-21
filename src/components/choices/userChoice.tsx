@@ -1,8 +1,9 @@
 import Link from "next/link";
-import {
-  Avatar,
-} from "@mui/material";
+import {useUserState, useTokenState} from "../../hooks/useUser"
+import { putt } from "@/libs/putFunc";
+import { deletee } from "@/libs/deleteFunc";
 import {User} from "./../../types/user"
+import FollowButton from "./../button/folllowButton"
 
 type Props ={
   user: User | null
@@ -10,7 +11,28 @@ type Props ={
 
 
 const UserChoice:React.FC<Props> =({user})=>{
-  
+  const {userState, setUserState}=useUserState()
+  const {TokenState}=useTokenState()
+  const onFollow = async() => {
+    if(!userState)return
+    let res: number = await putt(`/user/insert_follow/${user?.id}`, "", TokenState ? TokenState : " ")
+    if (res==1){
+      let demo: number[]=[]
+      if(userState.following_user_ids){demo=[...userState.following_user_ids]}
+      demo.push(Number(user?.id))
+      setUserState({...userState, following_user_ids: demo})
+      console.log(userState.following_user_ids)
+    }
+  }
+  const onDeleteFollow = async() => {
+    if(!userState)return
+    let res: number = await deletee(`/user/delete_follow/${user?.id}`, TokenState ? TokenState : " ")
+    if (res==1){
+      let demo: number[]=[...userState.following_user_ids]
+      demo = demo.filter((i)=> i != Number(user?.id))
+      setUserState({...userState, following_user_ids: demo})
+    }
+  }
 
 
   return(
@@ -25,7 +47,11 @@ const UserChoice:React.FC<Props> =({user})=>{
               </div>
             </div>
         </Link>
-        <button className="block border-2 m-3 mt-4 text-blue-500  text-sm h-8 font-semibold px-2   rounded-l-full rounded-r-full "> Following</button>
+        {!userState ?
+                <FollowButton onClick={()=>{}} display="follow"></FollowButton>
+                : userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{i==user?.id}) ?<FollowButton onClick={onDeleteFollow} display="following"></FollowButton> : 
+                <FollowButton onClick={onFollow} display="follow"></FollowButton>:
+                <FollowButton onClick={onFollow} display="follow"></FollowButton>}
         </div>
 
 

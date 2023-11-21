@@ -12,7 +12,7 @@ import remarkGfm from 'remark-gfm';
 import {useFetch} from "./../../hooks/useFetch"
 import {putt} from "./../../libs/putFunc"
 import {deletee} from "./../../libs/deleteFunc"
-import {timee, makeTags} from "./../../libs/helper"
+import {timee, makeTags, deleteSpaceStr} from "./../../libs/helper"
 import {
   Box,
   Container,
@@ -22,6 +22,8 @@ import {
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentChoice from "./../../components/choices/commentChoice"
+import NotFoundItems from "./../../components/notFound/notFoundItems"
+
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const id: any = context.params?.id;
@@ -106,6 +108,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
   const router = useRouter()
   const [tags] = useState(makeTags(article.tagss_out))
   const onGood = async() => {
+
     let res: number = await putt(`/user/insert_article_good/${article.id}`, "", TokenState ? TokenState : " ")
     if (res==1){
       goodMutate({is_good_flag: !good.is_good_flag, good_num: good.good_num++})
@@ -120,7 +123,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
   }
 
   const onSendComment = async() => {
-    if(!commentForm.comment || !userState)return 0;
+    if(!deleteSpaceStr(commentForm.comment))return;
     setCommentForm({...commentForm , user_id: userState ? userState.id : 0})
     console.log(commentForm)
     let res: number = await putt(`/user/insert_comment`, commentForm, TokenState ? TokenState : " ")
@@ -203,7 +206,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
                   <CommentChoice comment={comment} key={index}></CommentChoice>
                 )
               })
-            : ""}
+            : <NotFoundItems></NotFoundItems>}
             <TextareaAutosize
             className="mt-4 block border-2 w-full resize-none p-1 rounded-md"
             aria-label="comment"

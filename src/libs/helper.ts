@@ -25,4 +25,13 @@ export function makeTags(data: string) {
   return result.split(',')
 }
 
+export function deleteSpaceStr(data: string){
+  let result = data
+  result = result.replace(/\s+/, '')
+
+  return result
+}
+
+
+
 

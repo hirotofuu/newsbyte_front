@@ -1,6 +1,4 @@
-import Link from "next/link";
-import { NextPage, GetServerSideProps, GetStaticProps, GetStaticPaths } from 'next';
-import { useState, ChangeEvent, useEffect } from "react";
+import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import {getUserArticle, getOneIdNameUser} from "../../libs/getAFunc"
 import { useRouter } from "next/router";
 import ProfileOne from "../../components/profile/profile_one"
@@ -8,10 +6,11 @@ import {useFetch} from "./../../hooks/useFetch"
 import {Article} from "../../types/article"
 import {User} from "../../types/user"
 import ArticleChoice from "@/components/choices/articleChoice";
+import NotFoundItems from "./../../components/notFound/notFoundItems"
 export const getStaticProps: GetStaticProps = async (context) => {
   const idName: any = context.params?.id_name;
   const user: User = await getOneIdNameUser(idName)
-  const articles: Article[] = await getUserArticle(String(user.id))
+  const articles: Article[] = await getUserArticle(user.id)
   return{
     props: {
       articles,
@@ -52,7 +51,7 @@ const Mypage: NextPage<Factor> = ({articles, user}) => {
               <ArticleChoice article={article} key={index}></ArticleChoice>
             )
           })
-        : ""}
+        : <NotFoundItems></NotFoundItems>}
       </div>
     </>
   );
