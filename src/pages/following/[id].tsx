@@ -40,7 +40,7 @@ const Search: NextPage<Factor> = ({users}) => {
         {users ?
           users.map((user: any, index: any)=>{
             return (
-              <UserChoice user={user}></UserChoice>
+              <UserChoice user={user} key={index}></UserChoice>
             )
           })
         : <NotFoundItems></NotFoundItems>}

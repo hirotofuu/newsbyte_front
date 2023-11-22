@@ -6,7 +6,7 @@ import {
 import Frame from "./../frame/frame"
 import {useUserState} from "../../hooks/useUser"
 import axios from "../../libs/axios"
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 import { useRouter } from "next/router";
 import {useFetch} from "./../../hooks/useFetch"
 
@@ -23,10 +23,10 @@ export const Profile:React.FC=()=> {
       setUserState(null);
       router.push("/")
     })
-      .catch(error => {
+      .catch((error: AxiosError)=> {
         console.log("logout error happened", error);
       })
-  }
+  };
 
 
 
@@ -44,6 +44,7 @@ export const Profile:React.FC=()=> {
             <Button onClick={()=>{
               router.push(`/following/${userState?.id}`)
             }}>フォロー中: {userState?.following_user_ids ? userState?.following_user_ids.length : 0}</Button>
+          <Button  color="secondary" className="" onClick={logout}>ログアウト</Button>
           </div>
           </h1>
          <p className="text-center text-xs ">{userState?.profile}</p> 

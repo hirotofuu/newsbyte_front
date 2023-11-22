@@ -7,26 +7,12 @@ import {
   TextField,
 } from "@mui/material";
 import {useUserState} from "./../hooks/useUser"
-import axios from "./../libs/axios"
 import {deleteSpaceStr} from "./../libs/helper"
-import { AxiosError, AxiosResponse } from 'axios';
 
 export const Header:React.FC = () => {
   const router =useRouter();
-  const {userState, setUserState,} = useUserState();
+  const {userState} = useUserState();
   const [searchWord, setSearchWord] = useState("")
-
-  const logout = () =>{
-    axios
-    .get('/logout')
-    .then((res: AxiosResponse) => {
-      setUserState(null);
-    })
-      .catch((error: AxiosError)=> {
-        console.log("logout error happened", error);
-      })
-  };
-
 
   return(
     <>

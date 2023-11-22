@@ -1,18 +1,21 @@
 import * as React from 'react';
 import { useState } from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+
 import axios from '../libs/axios';
 import { AxiosError, AxiosResponse } from 'axios';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Header from "../components/header"
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import {
+  Avatar,
+  Button,
+  TextField,
+  CssBaseline,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  Alert,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function Copyright(props: any) {
@@ -38,15 +41,42 @@ export default function SignIn() {
     password: ""
   })
 
+  const [passwordComfirm, setPasswordComfirm] = useState("")
+
+  const [validation, setValidation] = useState("")
+
   const register = (event: any) => {
     event.preventDefault();
+    setValidation("")
+    var EMailpattern = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+.[A-Za-z0-9]+$/;
+    var pattarn =  /^[a-zA-Z0-9.?\/-_]{1,30}$/
+    var Passpattarn = /^[a-z\d]{8,30}$/i
+    if(!EMailpattern.test(payload.email)){
+      setValidation("正しい形式でメールアドレスを入力してください")
+      return ;
+    }
+    if(!pattarn.test(payload.user_name)){
+      setValidation("正しい形式でユーザーIDを入力してください")
+      return ;
+    }
+    if(!Passpattarn.test(payload.password)){
+      setValidation("正しい形式でパスワードを入力してください")
+      return ;
+    }
+    if(payload.password != passwordComfirm){
+      setValidation("パスワードが確認用と違います")
+      return ;
+    }
     axios
           .post('/register', JSON.stringify(payload))
           .then((res: AxiosResponse) => {
-            console.log("seccess")
+            if(res.data.error){
+              setValidation(res.data.message)
+            }
+            console.log("rrr")
           })
-          .catch((err: AxiosError) => {
-            console.log(err)
+          .catch((err: any) => {
+            setValidation(err.response?.data?.message)
           });
   };
 
@@ -90,7 +120,7 @@ export default function SignIn() {
               required
               fullWidth
               id="text"
-              label="ユーザー"
+              label="ユーザーID"
               name="userId"
               value={payload.user_name}
               onChange={e => {
@@ -119,9 +149,15 @@ export default function SignIn() {
               label="パスワード確認"
               type="password"
               id="password"
+              value={passwordComfirm}
+              onChange={e => {
+                setPasswordComfirm(e.target.value);
+              }}
               autoComplete="current-password"
             />
-            
+            {validation ? <Alert className="m-4" variant="filled" severity="error">
+            {validation}
+            </Alert> : ""}
             <Button
               type="submit"
               fullWidth

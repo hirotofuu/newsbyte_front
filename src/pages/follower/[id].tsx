@@ -38,7 +38,7 @@ const Search: NextPage<Factor> = ({id}) => {
         {followed_user ?
           followed_user.map((user: any, index: any)=>{
             return (
-              <UserChoice user={user}></UserChoice>
+              <UserChoice user={user} key={index}></UserChoice>
             )
           })
         : <NotFoundItems></NotFoundItems>}

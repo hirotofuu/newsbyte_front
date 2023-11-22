@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
 import axios from "./../../libs/axios"
+import {deleteSpaceStr} from "./../../libs/helper"
 import {
   TextField,
   Alert,
@@ -45,6 +46,9 @@ const Mypage: NextPage = () => {
 
   const update_profile = () =>{
     if (!userState)return 
+    if(!deleteSpaceStr(submitContent.user_name) || submitContent.user_name.length>50)return ;
+    if(submitContent.profile.length>200)return;
+    if(submitContent.user_name == userState.user_name && submitContent.profile == userState.profile) return ;
     console.log(JSON.stringify(submitContent))
     
     console.log(submitContent)
@@ -72,7 +76,7 @@ const Mypage: NextPage = () => {
       {validation}
     </Alert> : ""}
     <TextField
-    label="タイトル"
+    label="表示名"
     className="w-full px-1 mb-3"
     id="user_name"
     name="user_name"

@@ -67,6 +67,16 @@ const Mypage: NextPage<Factor> = ({article}) => {
     comment_ok: article.comment_ok,
     is_open_flag: article.is_open_flag,
   })
+  const [firstContent, setFirstContent] = useState<submission>({
+    id: article.id,
+    title: article.title,
+    medium: article.medium,
+    tags_in: article.tagss_out!="{}" ? makeTags(article.tagss_out) : [],
+    content: article.content,
+    user_id:  Number(article.user_id),
+    comment_ok: article.comment_ok,
+    is_open_flag: article.is_open_flag,
+  })
   const [tag, setTag] = useState("")
 
 const create = () =>{
@@ -82,6 +92,13 @@ const create = () =>{
   }
   if(submitContent.content.length>10000){
     setValidation("本文は10000文字未満に収めましょう")
+    return ;
+  }
+
+  if(submitContent == firstContent){
+    setValidation("変化を加えないと編集はできません")
+    console.log(submitContent)
+    console.log(firstContent)
     return ;
   }
 

@@ -11,9 +11,9 @@ import {
   Grid,
   Box,
   Typography,
-  Container
+  Container,
+  Alert,
 } from "@mui/material";
-import Header from "../components/header"
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useUserState, useTokenState} from "./../hooks/useUser"
@@ -41,13 +41,25 @@ export default function SignIn() {
     email: "",
     password: ""
   })
+  const [validation, setValidation] = useState("")
 
   const {userState, setUserState,} = useUserState()
   const router = useRouter()
 
   const login = (event: any) => {
     event.preventDefault();
-    console.log(payload)
+    setValidation("")
+    var EMailpattern = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+.[A-Za-z0-9]+$/;
+    var pattarn = /^[a-z\d]{8,30}$/i
+    if(!EMailpattern.test(payload.email)){
+      setValidation("正しい形式でメールアドレスを入力してください")
+      return ;
+    }
+    if(!pattarn.test(payload.password)){
+      setValidation("正しい形式でパスワードを入力してください")
+      return ;
+    }
+
     axios
           .post('/login', JSON.stringify(payload))
           .then((res: AxiosResponse) => {
@@ -57,8 +69,8 @@ export default function SignIn() {
             console.log("誰とも取り替えたくない")
             router.push("/")
           })
-          .catch((err: AxiosError) => {
-            console.log(err)
+          .catch((err: any) => {
+            setValidation(err.response?.data?.message)
           });
   };
 
@@ -104,13 +116,16 @@ export default function SignIn() {
               label="パスワード"
               type="password"
               id="password"
+              placeholder='半角英数字8文字以上30文字以下'
               autoComplete="current-password"
               value={payload.password}
               onChange={e => {
                 setPayload({...payload, password:e.target.value});
               }}
             />
-            
+            {validation ? <Alert className="m-4" variant="filled" severity="error">
+            {validation}
+            </Alert> : ""}
             <Button
               type="submit"
               fullWidth

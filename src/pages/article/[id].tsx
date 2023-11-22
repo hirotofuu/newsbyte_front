@@ -124,6 +124,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
 
   const onSendComment = async() => {
     if(!deleteSpaceStr(commentForm.comment))return;
+    if(commentForm.comment.length>100)return ;
     setCommentForm({...commentForm , user_id: userState ? userState.id : 0})
     console.log(commentForm)
     let res: number = await putt(`/user/insert_comment`, commentForm, TokenState ? TokenState : " ")
