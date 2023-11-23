@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { NextPage, GetServerSideProps, GetStaticProps } from 'next';
 import { useState, ChangeEvent, useEffect } from "react";
+import {useFetch} from "./../hooks/useFetch"
 import { useRouter } from "next/router";
 import {getFunc} from "./../libs/getAFunc"
 import {deleteSpaceStr} from "./../libs/helper"
@@ -9,20 +10,18 @@ import UserChoice from "@/components/choices/userChoice";
 import NotFoundItems from "@/components/notFound/notFoundItems";
 import {
   TextField,
+  CircularProgress
 } from "@mui/material";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const query: any = context.query.q;
-  const users: User[] = await getFunc(`/users/${query}`)
   return{
     props: {
-      users: users,
       query: query
     },
   };
 }
 
 type Factor = {
-  users: any
   query :string
 }
 
@@ -30,8 +29,9 @@ type Factor = {
 
 
 
-const Search: NextPage<Factor> = ({users, query}) => {
+const Search: NextPage<Factor> = ({query}) => {
   const [searchWord, setSearchWord] = useState("")
+  const {data: Quser, error: Error, mutate: QusersMutate} = useFetch(`/users/${query}`)
   const router = useRouter()
   return (
     <>
@@ -72,14 +72,14 @@ const Search: NextPage<Factor> = ({users, query}) => {
             <span className="text-blue-700">users</span>
           </button>
         </div>
-        <h2 className="mt-6 border-b-2">{users ? users.length : 0}件</h2>
-        {users ?
-          users.map((user: any, index: any)=>{
+        <h2 className="mt-6 border-b-2">{Quser ? Quser.length : 0}件</h2>
+        {typeof Quser!=='undefined' ? Quser ?
+          Quser.map((user: any, index: any)=>{
             return (
               <UserChoice user={user}></UserChoice>
             )
           })
-        : <NotFoundItems></NotFoundItems>}
+        : <NotFoundItems></NotFoundItems> : <CircularProgress></CircularProgress>}
       </div>
     </>
   );

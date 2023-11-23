@@ -2,27 +2,24 @@ import Link from "next/link";
 import { NextPage, GetServerSideProps, GetStaticProps } from 'next';
 import { useState, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/router";
-import {getSearch} from "./../libs/getAFunc"
 import {deleteSpaceStr} from "./../libs/helper"
-import {Article} from "../types/article"
 import ArticleChoice from "@/components/choices/articleChoice";
 import NotFoundItems from "@/components/notFound/notFoundItems";
+import {useFetch} from "./../hooks/useFetch"
 import {
   TextField,
+  CircularProgress
 } from "@mui/material";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const query: any = context.query.q;
-  const articles: Article[] = await getSearch("/search_articles", query)
   return{
     props: {
-      articles: articles,
       query: query
     },
   };
 }
 
 type Factor = {
-  articles: any
   query :string
 }
 
@@ -30,9 +27,11 @@ type Factor = {
 
 
 
-const Search: NextPage<Factor> = ({articles, query}) => {
+const Search: NextPage<Factor> = ({query}) => {
   const [searchWord, setSearchWord] = useState("")
   const router = useRouter()
+  const {data: Qarticles,  error: Error, mutate: QarticlesMutate, } = useFetch(`/search_articles?q=${query}`)
+
   return (
     <>
       <div className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6  mr-auto ml-auto px-1">
@@ -72,14 +71,14 @@ const Search: NextPage<Factor> = ({articles, query}) => {
           <span>users</span>
         </button>
         </div>
-        <h2 className="mt-6 border-b-2">{articles ? articles.length : 0}件</h2>
-        {articles ?
-          articles.map((article: any, index: any)=>{
+        <h2 className="mt-6 border-b-2">{Qarticles ? Qarticles.length : 0}件</h2>
+        {typeof Qarticles !== 'undefined' ? Qarticles ?
+          Qarticles.map((article: any, index: any)=>{
             return (
               <ArticleChoice article={article} key={index}></ArticleChoice>
             )
           })
-        : <NotFoundItems></NotFoundItems>}
+        : <NotFoundItems></NotFoundItems> : <CircularProgress></CircularProgress>}
       </div>
     </>
   );

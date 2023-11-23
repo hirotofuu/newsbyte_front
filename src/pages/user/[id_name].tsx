@@ -1,5 +1,5 @@
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
-import {getUserArticle, getOneIdNameUser} from "../../libs/getAFunc"
+import {getFunc} from "../../libs/getAFunc"
 import { useRouter } from "next/router";
 import ProfileOne from "../../components/profile/profile_one"
 import {useFetch} from "./../../hooks/useFetch"
@@ -9,8 +9,8 @@ import ArticleChoice from "@/components/choices/articleChoice";
 import NotFoundItems from "./../../components/notFound/notFoundItems"
 export const getStaticProps: GetStaticProps = async (context) => {
   const idName: any = context.params?.id_name;
-  const user: User = await getOneIdNameUser(idName)
-  const articles: Article[] = await getUserArticle(user.id)
+  const user: User = await getFunc(`/one_id_name_user/${idName}`)
+  const articles: Article[] = await getFunc(`/user_articles/${user.id}`)
   return{
     props: {
       articles,

@@ -38,7 +38,7 @@ const UserChoice:React.FC<Props> =({user})=>{
   return(
     <>
         <div className="flex border-b w-full bg-white">
-        <Link href={`/user/${user?.id_name}`} className="py-3 flex justify-between bg-white w-full ">
+        <Link href={userState?.id!=user?.id ?`/user/${user?.id_name}` : `/mypage/${userState?.id}`} className="py-3 flex justify-between bg-white w-full ">
             <div className="flex">
               <div className="">
                 <h1 className="pt-1 font-semibold">{user?.user_name}</h1>
@@ -49,9 +49,9 @@ const UserChoice:React.FC<Props> =({user})=>{
         </Link>
         {!userState ?
                 <FollowButton onClick={()=>{}} display="follow"></FollowButton>
-                : userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{i==user?.id}) ?<FollowButton onClick={onDeleteFollow} display="following"></FollowButton> : 
+                : userState.id!=user?.id ? userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{i==user?.id}) ?<FollowButton onClick={onDeleteFollow} display="following"></FollowButton> : 
                 <FollowButton onClick={onFollow} display="follow"></FollowButton>:
-                <FollowButton onClick={onFollow} display="follow"></FollowButton>}
+                <FollowButton onClick={onFollow} display="follow"></FollowButton> : ""}
         </div>
 
 

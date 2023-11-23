@@ -2,7 +2,7 @@ import Link from "next/link";
 import { NextPage, GetServerSideProps, GetStaticProps, GetStaticPaths } from 'next';
 import { useState } from "react";
 import { useRouter } from "next/router";
-import {getOneArticle} from "./../../libs/getAFunc"
+import {getFunc} from "./../../libs/getAFunc"
 import {useUserState, useTokenState} from "./../../hooks/useUser" 
 import {Article} from "./../../types/article"
 import LeftFrame from "../../components/frame/left_frame"
@@ -27,11 +27,11 @@ import NotFoundItems from "./../../components/notFound/notFoundItems"
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const id: any = context.params?.id;
-  const article: any = await getOneArticle(String(id))
+  const article: any = await getFunc(`/article/${id}`)
   
   return{
     props: {
-      article,
+      article : article ? article : null,
     },
     revalidate: 120
   };
@@ -95,7 +95,9 @@ type CommentForm = {
 }
 
 const Mypage: NextPage<Factor> = ({article}) => {
-  console.log(2)
+  if(!article)return (
+    <h1>現在この記事は非公開です</h1>
+  )
   const {data: good, error: goodError, mutate: goodMutate} = useFetch(`/good_article/${article.id}`)
   const {data: comments, error: commentError, mutate: commentMutate} = useFetch(`/article_comments/${article.id}`)
   const {userState, setUserState} = useUserState()
@@ -125,11 +127,10 @@ const Mypage: NextPage<Factor> = ({article}) => {
   const onSendComment = async() => {
     if(!deleteSpaceStr(commentForm.comment))return;
     if(commentForm.comment.length>100)return ;
-    setCommentForm({...commentForm , user_id: userState ? userState.id : 0})
-    console.log(commentForm)
     let res: number = await putt(`/user/insert_comment`, commentForm, TokenState ? TokenState : " ")
     if (res==1){
       console.log("成功")
+      setCommentForm({...commentForm , comment: ""})
       commentMutate()
     }
   }
@@ -183,7 +184,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
               <p>作成: {timee(article.created_at)}</p>
               {article.created_at!=article.updated_at ? <p>編集: {timee(article.updated_at)}</p> : ""}
             </div>
-            <Link href={`/user/${article.id_name}`}>
+            <Link  href={userState?.id != Number(article.user_id) ? `/user/${article.id_name}` : `/mypage/${userState?.id}`}>
               <div className="flex gap-2 mt-1">
                   <h2 className="mt-1 font-semibold">{article.name}({article.id_name})</h2>
               </div>
@@ -195,8 +196,8 @@ const Mypage: NextPage<Factor> = ({article}) => {
             h1: H1,
           }} className='markdown'>{article.content}</ReactMarkdown>  
           <div className="mt-16 border-b-2">
-            <button className="mb-4" onClick={good && good.is_good_flag ? onGoodDelete : onGood}>
-              <FavoriteIcon className={good && good.is_good_flag ? "text-red-500" : "text-gray-300"}></FavoriteIcon> <span className="text-gray-500 text-sm">{good ? good.good_num: 0}</span> 
+            <button className="mb-4" onClick={good && good.is_good_flag && TokenState ? onGoodDelete : onGood}>
+              <FavoriteIcon className={good && good.is_good_flag && TokenState ? "text-red-500" : "text-gray-300"}></FavoriteIcon> <span className="text-gray-500 text-sm">{good ? good.good_num: 0}</span> 
             </button>
           </div>
           <Box className="p-5">
@@ -225,14 +226,14 @@ const Mypage: NextPage<Factor> = ({article}) => {
         <RightFrame>
           <Container className=" sticky top-10">
             <Box className="p-3  rounded-md bg-gray-100">
-                <Link href={`/user/${article.id_name}`}>
-                  <p className="ml-3 text-xl font-semibold">{article.name}</p> 
+                <Link href={userState?.id != Number(article.user_id) ? `/user/${article.id_name}` : `/mypage/${userState?.id}`}>
+                  <p className="mb-1 text-xl font-semibold">{article.name}</p> 
                 </Link>
-              {!userState ?
-              <Button color="secondary">フォロー</Button> 
-              : userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{String(i)==article.user_id}) ? <Button color="secondary" onClick={onDeleteFollow}>フォロー中</Button> : 
-              <Button color="secondary" onClick={onFollow}>フォロー</Button> :
-              <Button color="secondary" onClick={onFollow}>フォロー</Button>}
+                {!userState || !TokenState ?
+                <Button color="secondary">フォローする</Button> 
+                : userState.id != Number(article.user_id) ? userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{i==Number(article.user_id)}) ? <Button color="secondary" onClick={onDeleteFollow}>フォロー中</Button> : 
+                <Button color="secondary" onClick={onFollow}>フォローする</Button> :
+                <Button color="secondary" onClick={onFollow}>フォローする</Button>:""}
               <p className="text-xs">
               2021年2月よりプログラミングを学び始めました。 JavaScript, React,TypeScript,Next.jsを中心に学習中です。
               </p>

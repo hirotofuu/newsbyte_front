@@ -4,7 +4,7 @@ import {
   Button
 } from "@mui/material";
 import Frame from "./../frame/frame"
-import {useUserState} from "../../hooks/useUser"
+import {useUserState, useTokenState} from "../../hooks/useUser"
 import axios from "../../libs/axios"
 import { AxiosResponse, AxiosError } from 'axios';
 import { useRouter } from "next/router";
@@ -14,6 +14,7 @@ import {useFetch} from "./../../hooks/useFetch"
 
 export const Profile:React.FC=()=> {
   const {userState, setUserState}=useUserState()
+  const {setTokenState} = useTokenState()
   const router = useRouter()
   const {data: followers, error: followersError, mutate: followersMutate} = useFetch(`/followed_users/${userState?.id}`)
   const logout = () =>{
@@ -21,6 +22,7 @@ export const Profile:React.FC=()=> {
     .get('/logout')
     .then((res: AxiosResponse) => {
       setUserState(null);
+      setTokenState(null)
       router.push("/")
     })
       .catch((error: AxiosError)=> {
