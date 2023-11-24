@@ -21,6 +21,7 @@ export async function getFunc(url: string){
     .get(domain+url)
     .then((response: AxiosResponse) => {
       console.log(response.data)
+      console.log("hello from the other side")
       return response.data;
     })
     .catch((err: AxiosError) => console.log(err));
@@ -40,7 +41,6 @@ export async function getTokenFunc(url: string, token: string){
   })
   .catch((err: AxiosError) =>{
     console.log(err)
-    return 0
   });
   return res;
 }

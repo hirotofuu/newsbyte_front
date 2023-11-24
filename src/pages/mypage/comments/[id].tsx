@@ -6,31 +6,35 @@ import {useUserState} from "./../../../hooks/useUser"
 import CommentChoice from "@/components/choices/commentChoice";
 import { useRouter } from "next/router";
 import NotFoundItems from "./../../../components/notFound/notFoundItems"
+import {useFetch} from "./../../../hooks/useFetch"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userID: any = context.params?.id;
   const comments: Comment[] = await getFunc(`/user_comments/${userID}`)
-  console.log(comments)
+  console.log("comment")
   return{
     props: {
       comments,
+      userID,
     },
   };
 }
 
 type Factor = {
   comments: Comment[] 
+  userID: any
 }
 
 
 
 
 
-const Mypage: NextPage<Factor> = ({comments}) => {
+const Mypage: NextPage<Factor> = ({comments, userID}) => {
   const {userState} = useUserState()
+  const {data: followers, error: followersError, mutate: followersMutate} = useFetch(`/followed_users/${userID}`)
   const router = useRouter()
   return (
     <>
-      <Profile></Profile>
+      <Profile followed_num={followers ? followers.length: 0}></Profile>
       <div className="flex justify-center gap-12 font-semibold border-b">
         <button onClick={()=>{router.push(`/mypage/${userState?.id}`)}}  className="pb-2">記事</button>
         <button onClick={()=>{router.push(`/mypage/draft/${userState?.id}`)}}  className="pb-2">下書き</button>

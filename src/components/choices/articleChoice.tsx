@@ -4,6 +4,7 @@ import {Article} from "../../types/article"
 import {timee} from "./../../libs/helper"
 import {useUserState, useTokenState} from "./../../hooks/useUser"
 import {deletee} from '@/libs/deleteFunc'
+import {useFetch} from "./../../hooks/useFetch"
 import {
   Avatar,
 } from "@mui/material";
@@ -15,10 +16,16 @@ const ArticleChoice: React.FC<Props> =({article})=>{
   const {userState} = useUserState()
   const {TokenState} = useTokenState()
   const [isLive, setIsLive] = useState(true)
-
+  const {mutate: DAmutation} = useFetch(`/user_save_articles/${article?.user_id}`)
+  const {mutate: Amutation} = useFetch(`/user_articles/${article?.user_id}`)
   const deleteComment = async() => {
     if(!userState)return
     let res: number = await deletee(`/user/delete_articles/${article?.id}`, TokenState ? TokenState : " ")
+    if(article?.is_open_flag){
+      Amutation()
+    }else{
+      DAmutation()
+    }
     if (res==1){
       console.log("deleted")
       setIsLive(false)

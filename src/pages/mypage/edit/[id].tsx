@@ -8,6 +8,7 @@ import ArticleChoice from "@/components/choices/articleChoice";
 import {makeTags} from "./../../../libs/helper"
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
+import {useFetch} from "./../../../hooks/useFetch"
 import axios from "./../../../libs/axios"
 import {
   FormControl,
@@ -27,6 +28,7 @@ import {Article} from "./../../../types/article";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const ID: any = context.params?.id;
   const article: any = await getFunc(`/edit_article/${ID}`)
+  console.log("hello")
   return{
     props: {
       article,
@@ -57,6 +59,8 @@ const Mypage: NextPage<Factor> = ({article}) => {
   const {TokenState} = useTokenState()
   const [isPreview, setIsPreview] = useState(false);
   const [validation, setValidation] = useState("");
+  const {mutate: DAmutation} = useFetch(`/user_save_articles/${article.user_id}`)
+  const {mutate: Amutation} = useFetch(`/user_articles/${article.user_id}`)
   const [submitContent, SetSubmitContent] = useState<submission>({
     id: article.id,
     title: article.title,
@@ -115,6 +119,10 @@ axios.
   put("http://localhost:8080/user/update_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
   .then((res: AxiosResponse) => {
     console.log("seccess")
+    Amutation()
+    if(!article.is_open_flag){
+      DAmutation()
+    }
   })
   .catch((err: AxiosError) => {
     console.log(err)
@@ -157,6 +165,10 @@ const create_under_save = () =>{
     put("http://localhost:8080/user/update_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
     .then((res: AxiosResponse) => {
       console.log("seccess")
+      DAmutation()
+      if(article.is_open_flag){
+        Amutation()
+      }
     })
     .catch((err: AxiosError) => {
       console.log(err)
@@ -166,6 +178,7 @@ const create_under_save = () =>{
   const onChange = (value: any) => {
     SetSubmitContent({...submitContent, content:value});
   };
+
   return (
 <>
     <header className="flex mt-2 px-2  w-full h-14">

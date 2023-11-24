@@ -10,13 +10,14 @@ import { AxiosResponse, AxiosError } from 'axios';
 import { useRouter } from "next/router";
 import {useFetch} from "./../../hooks/useFetch"
 
+type Props ={
+  followed_num: number
+}
 
-
-export const Profile:React.FC=()=> {
+export const Profile:React.FC<Props>=({followed_num})=> {
   const {userState, setUserState}=useUserState()
   const {setTokenState} = useTokenState()
   const router = useRouter()
-  const {data: followers, error: followersError, mutate: followersMutate} = useFetch(`/followed_users/${userState?.id}`)
   const logout = () =>{
     axios
     .get('/logout')
@@ -42,7 +43,7 @@ export const Profile:React.FC=()=> {
           <div className="flex text-sm">
             <Button onClick={()=>{
               router.push(`/follower/${userState?.id}`)
-            }}>フォロワー: {followers ? followers.length: 0}</Button>
+            }}>フォロワー: {followed_num}</Button>
             <Button onClick={()=>{
               router.push(`/following/${userState?.id}`)
             }}>フォロー中: {userState?.following_user_ids ? userState?.following_user_ids.length : 0}</Button>

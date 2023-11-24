@@ -12,6 +12,7 @@ import {
   Alert,
   Switch,
 } from "@mui/material";
+import {useFetch} from "./../hooks/useFetch"
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
@@ -34,6 +35,8 @@ export const MarkdownEditor = () => {
   const {TokenState} = useTokenState()
   const [isPreview, setIsPreview] = useState(false);
   const [validation, setValidation] = useState("");
+  const {mutate: DAmutation} = useFetch(`/user_save_articles/${userState?.id}`)
+  const {mutate: Amutation} = useFetch(`/user_articles/${userState?.id}`)
   const [submitContent, SetSubmitContent] = useState<submission>({
     title: "",
     medium: 0,
@@ -43,8 +46,8 @@ export const MarkdownEditor = () => {
     is_open_flag: false,
   })
   const [tag, setTag] = useState("")
-
-const create = () =>{
+  
+  const create = () =>{
   console.log(JSON.stringify(submitContent))
   setValidation("")
   if(!deleteSpaceStr(submitContent.title) || !deleteSpaceStr(submitContent.content) || !submitContent.medium){
@@ -70,6 +73,7 @@ const create = () =>{
 axios.
   put("http://localhost:8080/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
   .then((res: AxiosResponse) => {
+    Amutation()
     console.log("seccess")
   })
   .catch((err: AxiosError) => {
@@ -109,6 +113,7 @@ const create_under_save = () =>{
 axios.
   put("http://localhost:8080/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
   .then((res: AxiosResponse) => {
+    DAmutation()
     console.log("seccess")
   })
   .catch((err: AxiosError) => {
