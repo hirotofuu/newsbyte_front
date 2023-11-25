@@ -6,7 +6,11 @@ import Profile from "../../components/profile/profile"
 import {useUserState} from "./../../hooks/useUser" 
 import {Article} from "./../../types/article"
 import ArticleChoice from "@/components/choices/articleChoice";
-import NotFoundItems from "./../../components/notFound/notFoundItems";
+import {
+  Checkbox
+} from "@mui/material";
+import NotFoundItems from "./../../components/notFound/notFoundItems"
+import EArticleChoice from "./../../components/choices/user_A_choice"
 import {useFetch} from "./../../hooks/useFetch"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userID: any = context.params?.id;
@@ -44,13 +48,16 @@ const Mypage: NextPage<Factor> = ({userID}) => {
         <button onClick={()=>{router.push(`/mypage/setting`)}} className="pb-2">設定</button>
       </div>
       <div className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6 mr-auto ml-auto">
-        {A ?
-          A.map((article: any, index: any)=>{
-            return (
-              <ArticleChoice article={article} key={index}></ArticleChoice>
-            )
-          })
-        : <NotFoundItems></NotFoundItems>}
+      {A ?
+            A.map((article: any, index: any)=>{
+              return (
+                <li key={index} className="flex gap-4 p-4 border-b-2">
+                  <Checkbox/>
+                  <EArticleChoice article={article} key={index}></EArticleChoice>
+                </li>
+              )
+            })
+          : <NotFoundItems></NotFoundItems>}
       </div>
     </>
   );

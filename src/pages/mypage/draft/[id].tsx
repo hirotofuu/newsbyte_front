@@ -6,7 +6,11 @@ import {Article} from "./../../../types/article"
 import ArticleChoice from "@/components/choices/articleChoice";
 import { useRouter } from "next/router";
 import {useFetch} from "./../../../hooks/useFetch"
+import {
+  Checkbox
+} from "@mui/material";
 import NotFoundItems from "./../../../components/notFound/notFoundItems"
+import EArticleChoice from "./../../../components/choices/user_A_choice"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userID: any = context.params?.id;
   return{
@@ -44,8 +48,9 @@ const Mypage: NextPage<Factor> = ({userID}) => {
           {A ?
             A.map((article: any, index: any)=>{
               return (
-                <li key={index}>
-                  <ArticleChoice article={article} key={index}></ArticleChoice>
+                <li key={index} className="flex gap-4 p-4 border-b-2">
+                  <Checkbox/>
+                  <EArticleChoice article={article} key={index}></EArticleChoice>
                 </li>
               )
             })

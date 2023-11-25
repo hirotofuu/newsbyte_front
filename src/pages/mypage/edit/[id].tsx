@@ -54,7 +54,7 @@ type submission = {
 
 const Simplemde = dynamic(() => import("react-simplemde-editor"), { ssr: false });
 
-const Mypage: NextPage<Factor> = ({article}) => {
+const EditPage: NextPage<Factor> = ({article}) => {
   const {userState} = useUserState()
   const {TokenState} = useTokenState()
   const [isPreview, setIsPreview] = useState(false);
@@ -281,4 +281,4 @@ const create_under_save = () =>{
   );
 };
 
-export default Mypage;
+export default EditPage;
