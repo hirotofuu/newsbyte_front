@@ -21,7 +21,7 @@ const ArticleChoice: React.FC<Props> =({article})=>{
   const [isLive, setIsLive] = useState(true);
   const {mutate: DAmutation} = useFetch(`/user_save_articles/${article?.user_id}`)
   const {mutate: Amutation} = useFetch(`/user_articles/${article?.user_id}`)
-  const [tags, setTags] = useState(makeTags(article ? article?.tagss_out : "{}"))
+  const [tags] = useState(makeTags(article ? article?.tagss_out : "{}"))
   const deleteComment = async() => {
     if(!userState)return
     let res: number = await deletee(`/user/delete_articles/${article?.id}`, TokenState ? TokenState : " ")
@@ -50,20 +50,20 @@ const ArticleChoice: React.FC<Props> =({article})=>{
               <h2 className="text-lg font-semibold  text-black line-clamp-4 hover:text-blue-500">{article?.title}</h2>
               </Link>
               <ul className="flex gap-1 my-2 text-xs">
-              {tags[0] ?
-                tags.map((tag: any, index: any)=>{
-                  return (
-                    <li className="list-none" key={index}>
-                      <Chip label={tag} onClick={()=>{
-                        router.push({
-                          pathname:"/search",   //URL
-                          query: {q : tag} //検索クエリ
-                        });
-                      }}></Chip>
-                    </li>
-                  )
-                })
-                : ""}
+                {tags[0] ?
+                  tags.map((tag: any, index: any)=>{
+                    return (
+                      <li className="list-none" key={index}>
+                        <Chip label={tag} onClick={()=>{
+                          router.push({
+                            pathname:"/search",   //URL
+                            query: {q : tag} //検索クエリ
+                          });
+                        }}></Chip>
+                      </li>
+                    )
+                  })
+                  : ""}
               </ul> 
             <div className="flex gap-4 text-xs mt-3">
             <Link href={`/user/${article?.id_name}`}>{article?.name}</Link>
