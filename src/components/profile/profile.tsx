@@ -8,7 +8,6 @@ import {useUserState, useTokenState} from "../../hooks/useUser"
 import axios from "../../libs/axios"
 import { AxiosResponse, AxiosError } from 'axios';
 import { useRouter } from "next/router";
-import {useFetch} from "./../../hooks/useFetch"
 
 type Props ={
   followed_num: number

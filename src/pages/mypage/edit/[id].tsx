@@ -19,6 +19,8 @@ import {
   Chip,
   Alert,
   Switch,
+  Box,
+  Container
 } from "@mui/material";
 
 import ReactMarkdown from "react-markdown";
@@ -59,6 +61,7 @@ const EditPage: NextPage<Factor> = ({article}) => {
   const {TokenState} = useTokenState()
   const [isPreview, setIsPreview] = useState(false);
   const [validation, setValidation] = useState("");
+  const router = useRouter()
   const {mutate: DAmutation} = useFetch(`/user_save_articles/${article.user_id}`)
   const {mutate: Amutation} = useFetch(`/user_articles/${article.user_id}`)
   const [submitContent, SetSubmitContent] = useState<submission>({
@@ -123,6 +126,7 @@ axios.
     if(!article.is_open_flag){
       DAmutation()
     }
+    router.push(`/mypage/${userState?.id}`)
   })
   .catch((err: AxiosError) => {
     console.log(err)
@@ -169,6 +173,7 @@ const create_under_save = () =>{
       if(article.is_open_flag){
         Amutation()
       }
+      router.push(`/mypage/draft/${userState?.id}`)
     })
     .catch((err: AxiosError) => {
       console.log(err)
@@ -182,14 +187,14 @@ const create_under_save = () =>{
   return (
 <>
     <header className="flex mt-2 px-2  w-full h-14">
-      <div className="flex ml-auto mt-1 mr-3 gap-1">
+      <Box className="flex ml-auto mt-1 mr-3 gap-1">
         <button onClick={!submitContent.is_open_flag ? create_under_save : create} className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">{!submitContent.is_open_flag ? "下書き保存" : "公開保存"}</button>
         <Switch
         checked={submitContent.is_open_flag}
         onChange={ ()=> SetSubmitContent({...submitContent, is_open_flag: !submitContent.is_open_flag})}
         inputProps={{ 'aria-label': 'controlled' }}
         />
-      </div>
+      </Box>
     </header>
     {validation ? <Alert className="m-4" variant="filled" severity="error">
       {validation}
@@ -262,21 +267,22 @@ const create_under_save = () =>{
       )}
 
     </ul>
+    <Container>
+      <Box className="flex justify-between px-2 mt-8  w-full">
 
-    <div className="flex justify-between px-2 mt-8  w-full">
-
-      <h1 className="text-xl font-semibold">本文</h1>
-
-
-        <button onClick={()=>setIsPreview(!isPreview)} className=" px-4 border-r-2   text-white bg-blue-500">{!isPreview ? "プレビューへ" : "編集へ戻る"}</button>
+        <h1 className="text-xl font-semibold">本文</h1>
 
 
-    </div>
-    {!isPreview ? <Simplemde value={submitContent.content} onChange={onChange}/> : 
-    <>
-       <ReactMarkdown remarkPlugins={[remarkGfm]} className='markdown mt-3'>{submitContent.content}</ReactMarkdown>  
-    </>
-    }
+          <button onClick={()=>setIsPreview(!isPreview)} className=" px-4 border-r-2   text-white bg-blue-500">{!isPreview ? "プレビューへ" : "編集へ戻る"}</button>
+
+
+      </Box>
+      {!isPreview ? <Simplemde value={submitContent.content} onChange={onChange}/> : 
+      <>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} className='markdown mt-3'>{submitContent.content}</ReactMarkdown>  
+      </>
+      }
+    </Container>
     </>
   );
 };

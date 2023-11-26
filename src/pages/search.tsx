@@ -8,8 +8,11 @@ import NotFoundItems from "@/components/notFound/notFoundItems";
 import {useFetch} from "./../hooks/useFetch"
 import {
   TextField,
-  CircularProgress
+  CircularProgress,
+  Box
 } from "@mui/material";
+import Frame from "./../components/frame/frame"
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const query: any = context.query.q;
   return{
@@ -34,9 +37,9 @@ const Search: NextPage<Factor> = ({query}) => {
 
   return (
     <>
-      <div className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6  mr-auto ml-auto px-1">
+      <Frame>
         <h1 className="text-2xl font-semibold mt-8">"{query}"の検索結果</h1>
-        <section className="mt-10">
+        <Box className="mt-10">
           <TextField
             id="search-bar"
             className="text w-2/3"
@@ -57,20 +60,20 @@ const Search: NextPage<Factor> = ({query}) => {
             query: {q :searchWord} //検索クエリ
             });
           }}   className="p-1 border-1 border-black bg-gray-300 ml-1">記事を検索</button>
-        </section>
-        <div className="mt-4">
-        <button className={"p-2 rounded-3xl  hover:bg-gray-300 mr-2"}>
-            <span className="text-blue-700">articles</span>
-        </button>
-        <button onClick={()=>{
-          router.push({
-            pathname:"/search_user",   //URL
-            query: {q :query} //検索クエリ
-          });
-        }}  className={`p-2 rounded-3xl hover:bg-gray-300 `}>
-          <span>users</span>
-        </button>
-        </div>
+        </Box>
+        <Box className="mt-4">
+          <button className={"p-2 rounded-3xl  hover:bg-gray-300 mr-2"}>
+              <span className="text-blue-700">articles</span>
+          </button>
+          <button onClick={()=>{
+            router.push({
+              pathname:"/search_user",   //URL
+              query: {q :query} //検索クエリ
+            });
+          }}  className={`p-2 rounded-3xl hover:bg-gray-300 `}>
+            <span>users</span>
+          </button>
+        </Box>
         <h2 className="mt-6 border-b-2">{Qarticles ? Qarticles.length : 0}件</h2>
         {typeof Qarticles !== 'undefined' ? Qarticles ?
           Qarticles.map((article: any, index: any)=>{
@@ -79,7 +82,7 @@ const Search: NextPage<Factor> = ({query}) => {
             )
           })
         : <NotFoundItems></NotFoundItems> : <CircularProgress></CircularProgress>}
-      </div>
+      </Frame>
     </>
   );
 };

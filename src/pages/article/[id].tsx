@@ -196,7 +196,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
             h1: H1,
           }} className='markdown'>{article.content}</ReactMarkdown>  
           <div className="mt-16 border-b-2">
-            <button className="mb-4" onClick={good && good.is_good_flag && TokenState ? onGoodDelete : onGood}>
+            <button className="mb-4" onClick={TokenState ? good && good.is_good_flag  ? onGoodDelete : onGood : ()=>{router.push("/login")}}>
               <FavoriteIcon className={good && good.is_good_flag && TokenState ? "text-red-500" : "text-gray-300"}></FavoriteIcon> <span className="text-gray-500 text-sm">{good ? good.good_num: 0}</span> 
             </button>
           </div>
@@ -230,7 +230,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
                   <p className="mb-1 text-xl font-semibold">{article.name}</p> 
                 </Link>
                 {!userState || !TokenState ?
-                <Button color="secondary">フォローする</Button> 
+                <Button color="secondary" onClick={()=>{router.push("/login")}}>フォローする</Button> 
                 : userState.id != Number(article.user_id) ? userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{i==Number(article.user_id)}) ? <Button color="secondary" onClick={onDeleteFollow}>フォロー中</Button> : 
                 <Button color="secondary" onClick={onFollow}>フォローする</Button> :
                 <Button color="secondary" onClick={onFollow}>フォローする</Button>:""}

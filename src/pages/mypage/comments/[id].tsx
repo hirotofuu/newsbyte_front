@@ -8,9 +8,9 @@ import { useRouter } from "next/router";
 import NotFoundItems from "./../../../components/notFound/notFoundItems"
 import {useFetch} from "./../../../hooks/useFetch"
 import {
-  Container,
   Box
 } from "@mui/material";
+import Frame from "./../../../components/frame/frame"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userID: any = context.params?.id;
   const comments: Comment[] = await getFunc(`/user_comments/${userID}`)
@@ -39,13 +39,13 @@ const Mypage: NextPage<Factor> = ({comments, userID}) => {
   return (
     <>
       <Profile followed_num={followers ? followers.length: 0}></Profile>
-      <Container className="flex justify-center gap-12 font-semibold border-b">
+      <Box className="flex justify-center gap-12 mt-6 font-semibold border-b">
         <button onClick={()=>{router.push(`/mypage/${userState?.id}`)}}  className="pb-2">記事</button>
         <button onClick={()=>{router.push(`/mypage/draft/${userState?.id}`)}}  className="pb-2">下書き</button>
         <button className="pb-2 border-b-2 border-blue-500">コメント</button>
         <button onClick={()=>{router.push(`/mypage/setting`)}} className="pb-2">設定</button>
-      </Container>
-      <Box className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6 mr-auto ml-auto">
+      </Box>
+      <Frame>
         <ul>
           {comments ?
                   comments.map((comment: any, index: any)=>{
@@ -60,7 +60,7 @@ const Mypage: NextPage<Factor> = ({comments, userID}) => {
                   })
                 : <NotFoundItems></NotFoundItems>}
         </ul>
-      </Box>
+      </Frame>
     </>
   );
 };

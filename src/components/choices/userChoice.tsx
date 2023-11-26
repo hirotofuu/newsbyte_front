@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {useUserState, useTokenState} from "../../hooks/useUser"
+import { useRouter } from "next/router";
 import { putt } from "@/libs/putFunc";
 import { deletee } from "@/libs/deleteFunc";
 import {User} from "./../../types/user"
@@ -13,6 +14,7 @@ type Props ={
 const UserChoice:React.FC<Props> =({user})=>{
   const {userState, setUserState}=useUserState()
   const {TokenState}=useTokenState()
+  const router = useRouter()
   const onFollow = async() => {
     if(!userState)return
     let res: number = await putt(`/user/insert_follow/${user?.id}`, "", TokenState ? TokenState : " ")
@@ -48,7 +50,7 @@ const UserChoice:React.FC<Props> =({user})=>{
             </div>
         </Link>
         {!userState ?
-                <FollowButton onClick={()=>{}} display="follow"></FollowButton>
+                <FollowButton onClick={()=>{router.push("/login")}} display="follow"></FollowButton>
                 : userState.id!=user?.id ? userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{i==user?.id}) ?<FollowButton onClick={onDeleteFollow} display="following"></FollowButton> : 
                 <FollowButton onClick={onFollow} display="follow"></FollowButton>:
                 <FollowButton onClick={onFollow} display="follow"></FollowButton> : ""}

@@ -51,7 +51,7 @@ export const ProfileOne:React.FC<Props>=({user, followed_num})=> {
               router.push(`/follower/${user.id}`)
             }}>フォロワー: {followed_num}</Button>
             {!userState || !TokenState ?
-                <Button color="secondary">フォローする</Button> 
+                <Button color="secondary" onClick={()=>{router.push("/login")}}>フォローする</Button> 
                 : userState.id != user.id ? userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{i==user.id}) ? <Button color="secondary" onClick={onDeleteFollow}>フォロー中</Button> : 
                 <Button color="secondary" onClick={onFollow}>フォローする</Button> :
                 <Button color="secondary" onClick={onFollow}>フォローする</Button>:""}

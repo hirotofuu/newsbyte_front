@@ -13,7 +13,7 @@ import {
   Switch,
 } from "@mui/material";
 import {useFetch} from "./../hooks/useFetch"
-
+import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
 import {useUserState, useTokenState} from "./../hooks/useUser" 
@@ -33,6 +33,7 @@ const Simplemde = dynamic(() => import("react-simplemde-editor"), { ssr: false }
 export const MarkdownEditor = () => {
   const {userState} = useUserState()
   const {TokenState} = useTokenState()
+  const router = useRouter()
   const [isPreview, setIsPreview] = useState(false);
   const [validation, setValidation] = useState("");
   const {mutate: DAmutation} = useFetch(`/user_save_articles/${userState?.id}`)
@@ -74,7 +75,7 @@ axios.
   put("http://localhost:8080/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
   .then((res: AxiosResponse) => {
     Amutation()
-    console.log("seccess")
+    router.push(`/mypage/${userState?.id}`)
   })
   .catch((err: AxiosError) => {
     console.log(err)
@@ -114,7 +115,7 @@ axios.
   put("http://localhost:8080/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
   .then((res: AxiosResponse) => {
     DAmutation()
-    console.log("seccess")
+    router.push(`/mypage/draft/${userState?.id}`)
   })
   .catch((err: AxiosError) => {
     console.log(err)
