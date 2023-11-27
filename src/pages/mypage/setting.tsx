@@ -1,10 +1,9 @@
-import { NextPage, GetServerSideProps } from 'next';
-import {getUserArticle} from "./../../libs/getAFunc"
+import { NextPage } from 'next';
+import {useIsLogin} from "./../../hooks/useRequireLogin";
 import { useRouter } from "next/router";
-import Profile from "../../components/profile/profile"
 import {useUserState} from "./../../hooks/useUser" 
-import {Article} from "./../../types/article"
 import { AxiosError, AxiosResponse } from 'axios';
+import { Box } from '@mui/material';
 import axios from "./../../libs/axios"
 
 
@@ -26,11 +25,14 @@ const Mypage: NextPage = () => {
         console.log("logout error happened", error);
       })
   };
+
+  useIsLogin()
   return (
     <>
-      <Profile></Profile>
-      <button onClick={logout}>ログアウト</button>
-      <button>アカウント削除</button>
+      <Box>
+        <button onClick={logout}>ログアウト</button>
+        <button>アカウント削除</button>
+      </Box>
     </>
   );
 };

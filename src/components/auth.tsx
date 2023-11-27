@@ -31,15 +31,24 @@ export const Auth:React.FC<Props> = ({children}) => {
       }, 600000);
       setTickInterval(i);
     } else {  
-      console.log("turning off ticking");
-      console.log("turning off tickInterval", tickInterval);
-      setTickInterval(null);
-      clearInterval(tickInterval);
+      axios
+      .get('/logout')
+      .then((res: AxiosResponse) => {
+        console.log("turning off ticking");
+        console.log("turning off tickInterval", tickInterval);
+        setTickInterval(null);
+        clearInterval(tickInterval);
+        localStorage.removeItem('wasLogin')
+      })
+      .catch((error: AxiosError)=> {
+        console.log("logout error happened", error);
+      })
     }
   }, [tickInterval])
 
   useEffect(() => {
-    if (!userState) {
+    const wasLogin = localStorage.getItem('wasLogin')
+    if (!userState && wasLogin) {
       axios
       .get('/refresh')
       .then((res: AxiosResponse) => {
@@ -52,7 +61,8 @@ export const Auth:React.FC<Props> = ({children}) => {
         toggleRefresh(true);
       })
         .catch(error => {
-          console.log("user is not logged in", error);
+          console.log("you are not logged in", error);
+          localStorage.removeItem('wasLogin')
         })
     }
   }, [])

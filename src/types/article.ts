@@ -3,7 +3,7 @@ export type Article={
   content: string,
   title: string,
   medium: number,
-  user_id: string,
+  user_id: number,
   id_name: string
   comment_ok: boolean,
   is_open_flag: boolean,

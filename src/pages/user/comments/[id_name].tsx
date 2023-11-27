@@ -9,8 +9,10 @@ import {User} from "../../../types/user"
 import {
   Box,
 } from "@mui/material";
+import Frame from "./../../../components/frame/frame"
 import CommentChoice from "@/components/choices/commentChoice";
 import NotFoundItems from "./../../../components/notFound/notFoundItems"
+import CommentBar from "./../../../components/factor/comment_bar"
 export const getStaticProps: GetStaticProps = async (context) => {
   const idName: any = context.params?.id_name;
   const user: User = await getFunc(`/one_id_name_user/${idName}`)
@@ -52,7 +54,8 @@ const Mypage: NextPage<Factor> = ({comments, user}) => {
         <button className="pb-2" onClick={()=>{router.push(`/user/${user.id_name}`)}}>記事</button>
         <button className="pb-2 border-b-2 border-blue-500">コメント</button>
       </Box>
-      <Box className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6  mr-auto ml-auto">
+      <CommentBar comment_number={comments ? comments.length : 0}></CommentBar>
+      <Frame>
         <ul>
           {comments ?
                   comments.map((comment: any, index: any)=>{
@@ -67,7 +70,7 @@ const Mypage: NextPage<Factor> = ({comments, user}) => {
                   })
                 : <NotFoundItems></NotFoundItems>}
         </ul>
-      </Box>
+      </Frame>
     </>
   );
 };

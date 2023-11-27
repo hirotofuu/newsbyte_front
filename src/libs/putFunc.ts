@@ -18,3 +18,21 @@ export function putt(url: string, data: any, token: string) {
   });
   return res;
 }
+
+export function postt(url: string, data: any, token: string) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Authorization': "Bearer " + token ,
+}
+
+  const res=axios.post('http://localhost:8080' + url, data , {headers: headers, withCredentials: true })
+  .then((response: AxiosResponse) => {
+    return 1
+  })
+  .catch((err: AxiosError) =>{
+    console.log(err)
+    return 0
+  });
+  return res;
+}

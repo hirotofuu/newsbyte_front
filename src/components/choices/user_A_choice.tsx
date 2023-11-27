@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { useState } from "react";
+import React from 'react'
+import { useState, useCallback } from "react";
 import {Article} from "../../types/article"
 import {timee} from "./../../libs/helper";
 import { makeTags } from "./../../libs/helper";
@@ -11,16 +12,16 @@ type Props ={
   article: Article | null
 };
 
-const EArticleChoice: React.FC<Props> =({article})=>{
+const EArticleChoice: React.FC<Props> =React.memo(({article})=>{
   const [tags] = useState(makeTags(article ? article?.tagss_out : "{}"))
   const router = useRouter()
   return(
     <>
           <div>
             <Link href={`/article/${article?.id}`}>
-              <h2 className="text-md font-semibold xl:text-base lg:text-base md:text-base text-sm  text-black line-clamp-4">{article?.title}</h2>
+              <h2 className="text-md font-semibold xl:text-base lg:text-base md:text-base text-sm  text-black line-clamp-4 hover:text-blue-500">{article?.title}</h2>
             </Link>
-              <ul className="flex gap-1 my-2 text-xs">
+              <ul className="flex gap-1 my-2 text-xs  flex-row flex-wrap">
                 {tags[0] ?
                   tags.map((tag: any, index: any)=>{
                     return (
@@ -46,6 +47,6 @@ const EArticleChoice: React.FC<Props> =({article})=>{
           </div>
     </>
   )
-}
+})
 
 export default EArticleChoice

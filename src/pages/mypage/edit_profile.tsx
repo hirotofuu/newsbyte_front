@@ -1,6 +1,7 @@
 import { NextPage } from 'next';
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { AxiosError, AxiosResponse } from 'axios';
+import {useIsLogin} from "./../../hooks/useRequireLogin";
 import { useRouter } from "next/router";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
@@ -10,7 +11,8 @@ import {
   TextField,
   Alert,
   TextareaAutosize,
-  Button
+  Button,
+  Box
 } from "@mui/material";
 
 import {useUserState, useTokenState} from "./../../hooks/useUser" 
@@ -22,13 +24,11 @@ type submission = {
   profile: string
 }
 
-const Simplemde = dynamic(() => import("react-simplemde-editor"), { ssr: false });
 
 const Mypage: NextPage = () => {
   const {userState, setUserState} = useUserState()
   const {TokenState} = useTokenState()
   const router = useRouter()
-  const [isPreview, setIsPreview] = useState(false);
   const [validation, setValidation] = useState("");
   const [submitContent, SetSubmitContent] = useState<submission>({
     id:  0,
@@ -46,9 +46,18 @@ const Mypage: NextPage = () => {
 
   const update_profile = () =>{
     if (!userState)return 
-    if(!deleteSpaceStr(submitContent.user_name) || submitContent.user_name.length>50)return ;
-    if(submitContent.profile.length>200)return;
-    if(submitContent.user_name == userState.user_name && submitContent.profile == userState.profile) return ;
+    if(!deleteSpaceStr(submitContent.user_name) || submitContent.user_name.length>50){
+      setValidation("50字以内の名前が必要です")
+      return ;
+    }
+    if(submitContent.profile.length>200){
+      setValidation("プロフィールは200字以内です")
+      return ;
+    }
+    if(submitContent.user_name == userState.user_name && submitContent.profile == userState.profile) {
+      router.push(`/mypage/${userState?.id}`)
+      return ;
+    }
     console.log(JSON.stringify(submitContent))
     
     console.log(submitContent)
@@ -69,36 +78,39 @@ const Mypage: NextPage = () => {
       });
     }
 
+    useIsLogin()
+
   
   return (
-<>
-    {validation ? <Alert className="m-4" variant="filled" severity="error">
-      {validation}
-    </Alert> : ""}
-    <TextField
-    label="表示名"
-    className="w-full px-1 mb-3"
-    id="user_name"
-    name="user_name"
-    placeholder="最大100文字"
-    size="small"
-    value={submitContent.user_name}
-    onChange={e => {
-      SetSubmitContent({...submitContent, user_name:e.target.value});
-    }}
-    />
-    <TextareaAutosize
-    className="w-full px-1 mb-3 border-2 m-1"
-    id="user_name"
-    name="user_name"
-    placeholder="最大100文字"
-    value={submitContent.profile}
-    onChange={e => {
-      SetSubmitContent({...submitContent, profile:e.target.value});
-    }}
-    />
-  
-    <Button onClick={update_profile}>更新</Button>
+    <>
+      <Box className="m-10">
+          {validation ? <Alert className="m-4" variant="filled" severity="error">
+            {validation}
+          </Alert> : ""}
+          <TextField
+          label="表示名"
+          className="w-full px-1 mb-3"
+          id="user_name"
+          name="user_name"
+          placeholder="最大100文字"
+          size="small"
+          value={submitContent.user_name}
+          onChange={e => {
+            SetSubmitContent({...submitContent, user_name:e.target.value});
+          }}
+          />
+          <TextareaAutosize
+          className="w-full px-1 mb-3 border-2 m-1"
+          id="profile"
+          name="profile"
+          placeholder="最大100文字"
+          value={submitContent.profile}
+          onChange={e => {
+            SetSubmitContent({...submitContent, profile:e.target.value});
+          }}
+          />
+          <Button onClick={update_profile}>更新</Button>
+      </Box>
     </>
   );
 };

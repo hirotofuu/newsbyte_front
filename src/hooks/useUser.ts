@@ -4,10 +4,11 @@ import { currentUserState, tokenState } from '../atoms/userAtom'
 export function useUserState() {
   const userState = useRecoilValue(currentUserState);
   const setUserState = useSetRecoilState(currentUserState);
-
+  const isAuthChecking = userState === undefined;
   return {
     userState,
     setUserState,
+    isAuthChecking,
   };
 }
 

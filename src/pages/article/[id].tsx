@@ -69,7 +69,7 @@ const H1 = ({ node, ...props }: any) => {
 const ankerH1Link = ({ node, ...props }: any) => {
   return (
       <a
-        className="list-item list-none mb-3 pb-2 border-b hover:text-blue-500"
+        className="list-item list-none mb-1 pb-1 border-b hover:text-blue-500"
         href={"#" + node.position?.start.line.toString()}
       >
         {props.children}
@@ -80,7 +80,7 @@ const ankerH1Link = ({ node, ...props }: any) => {
 const ankeH2rLink = ({ node, ...props }: any) => {
   return (
       <a
-        className="list-item list-none mb-2 pb-2 border-b hover:text-blue-500 pl-3"
+        className="list-item list-none mb-1 pb-1 border-b hover:text-blue-500 pl-3"
         href={"#" + node.position?.start.line.toString()}
       >
         {props.children}
@@ -111,7 +111,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
   const [tags] = useState(makeTags(article.tagss_out))
   const onGood = async() => {
 
-    let res: number = await putt(`/user/insert_article_good/${article.id}`, "", TokenState ? TokenState : " ")
+    let res: number = await putt(`/user/insert_article_good/${article.id}`, null, TokenState ? TokenState : " ")
     if (res==1){
       goodMutate({is_good_flag: !good.is_good_flag, good_num: good.good_num++})
     }
@@ -137,7 +137,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
 
   const onFollow = async() => {
     if(!userState)return
-    let res: number = await putt(`/user/insert_follow/${article.user_id}`, "", TokenState ? TokenState : " ")
+    let res: number = await putt(`/user/insert_follow/${article.user_id}`, null, TokenState ? TokenState : " ")
     if (res==1){
       let demo: number[]=[]
       if(userState.following_user_ids){demo=[...userState.following_user_ids]}
@@ -164,7 +164,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
         <LeftFrame>
           <Box className="mb-10">
             <h1 className="mt-4 font-bold text-3xl">{article.title}</h1>
-            <ul className="mt-3 flex gap-2">
+            <ul className="mt-3 flex gap-2 flex-row flex-wrap">
             {tags[0] ?
               tags.map((tag: any, index: any)=>{
                 return (
@@ -201,7 +201,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
             </button>
           </div>
           <Box className="p-5">
-            <label className="text-sm mb-2 font font-semibold">コメント欄</label>
+            <label className="text-sm mb-2 font font-semibold">コメント欄({comments ? comments.length : 0})</label>
             {comments ?
               comments.map((comment: any, index: any)=>{
                 return (
@@ -239,7 +239,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
               </p>
             </Box>
             <Box className="mt-8">
-            <div className="p-3 bg-gray-100 rounded-md ">
+            <div className="p-3 bg-gray-100 rounded-md overflow-auto max-h-96">
               目次
               <ol className="mt-6 text-sm list-decimal list-inside">
                   <button

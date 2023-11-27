@@ -1,9 +1,11 @@
 import { NextPage, GetServerSideProps } from 'next';
-import {getFunc} from "./../../libs/getAFunc"
 import { useEffect, useState} from 'react';
 import { useRouter } from "next/router";
 import {useUserState} from "./../../hooks/useUser" 
 import {useFetch} from "./../../hooks/useFetch"
+import {useRequireLogin} from "../../hooks/useRequireLogin"
+import { useTokenState } from './../../hooks/useUser';
+import { postt } from '@/libs/putFunc';
 import {Article} from "./../../types/article"
 import {
   Checkbox,
@@ -11,7 +13,7 @@ import {
   CircularProgress
 } from "@mui/material";
 import Profile from "../../components/profile/profile"
-import MypageFooter from "./../../components/factor/mypage_footer"
+import MypageBox from "../../components/factor/mypage_box"
 import Frame from "./../../components/frame/frame"
 import NotFoundItems from "./../../components/notFound/notFoundItems"
 import EArticleChoice from "./../../components/choices/user_A_choice"
@@ -34,8 +36,10 @@ type Factor = {
 
 const Mypage: NextPage<Factor> = ({userID}) => {
   const {userState} = useUserState()
+  const {TokenState} = useTokenState()
   const [checkedValues, setCheckedValues] = useState<any>([]);
   const [trashValidate, setTrashValidate] = useState("");
+  const [isDelete, setIsdelete] = useState(false)
   const {data: followers, error: followersError, mutate: followersMutate} = useFetch(`/followed_users/${userID}`)
   const {data: A, error: Aerror, mutate: Amutation} = useFetch(`/user_articles/${userID}`)
   const router = useRouter()
@@ -49,10 +53,25 @@ const Mypage: NextPage<Factor> = ({userID}) => {
     }
   };
 
-  const onDelete = () => {
-    if(!checkedValues.length)setTrashValidate("削除される記事が選ばれていません")
-    else setTrashValidate(`${checkedValues.length}件の記事が削除されました`)
+  const onDelete = async() => {
+    if(!userState || userState?.id!=userID)return
+    if(!checkedValues.length){
+      setTrashValidate("一つ以上記事を選びましょう")
+      return ;
+    }
+    setIsdelete(true);
+    let res: number = await postt("/user/delete_some_articles", JSON.stringify(checkedValues), TokenState ? TokenState : " ")
+    if (res==1){
+      setTrashValidate(`${checkedValues.length}件の記事が削除されました`)
+      setCheckedValues([])
+      Amutation()
+    }else{
+      setTrashValidate("サーバーでエラーが起きました")
+    }
+    setIsdelete(false);
   }
+
+  useRequireLogin(userID);
 
   return (
     <>
@@ -63,6 +82,7 @@ const Mypage: NextPage<Factor> = ({userID}) => {
         <button  onClick={()=>{router.push(`/mypage/comments/${userState?.id}`)}}  className="pb-2">コメント</button>
         <button onClick={()=>{router.push(`/mypage/setting`)}} className="pb-2">設定</button>
       </Box>
+      <MypageBox onDelete={onDelete} trashMessage={trashValidate} isDelete={isDelete} article_number={A ? A.length : 0}></MypageBox>
       <Frame >
         <Box className="mb-20">
           {typeof A != "undefined" ? A ?
@@ -77,7 +97,6 @@ const Mypage: NextPage<Factor> = ({userID}) => {
           : <NotFoundItems></NotFoundItems> : <CircularProgress></CircularProgress>}
         </Box>
       </Frame>
-      <MypageFooter onDelete={onDelete} trashMessage={trashValidate}></MypageFooter>
     </>
   );
 };

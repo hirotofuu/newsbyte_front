@@ -1,4 +1,4 @@
-import {useState, useEffect, ChangeEvent, useCallback} from 'react'
+import React, {useState} from 'react'
 import {timee} from "./../../libs/helper"
 import {Comment} from "./../../types/article"
 import {useUserState, useTokenState} from "./../../hooks/useUser"
@@ -14,7 +14,7 @@ type Props ={
 
 
 
-const CommentChoice: React.FC<Props> =({comment})=>{
+const CommentChoice: React.FC<Props> =React.memo(({comment})=>{
   const {userState} = useUserState()
   const {TokenState} = useTokenState()
   const [isLive, setIsLive] = useState(true)
@@ -57,6 +57,6 @@ const CommentChoice: React.FC<Props> =({comment})=>{
 
     </>
   )
-}
+})
 
 export default CommentChoice

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 import {Article} from "../../types/article"
 import {timee} from "./../../libs/helper"
 import {useUserState, useTokenState} from "./../../hooks/useUser"
@@ -9,12 +9,13 @@ import { makeTags } from "./../../libs/helper";
 import { useRouter } from "next/router";
 import {
   Chip,
+  Box
 } from "@mui/material";
 type Props ={
   article: Article | null
 }
 
-const ArticleChoice: React.FC<Props> =({article})=>{
+const ArticleChoice: React.FC<Props> =React.memo(({article})=>{
   const {userState} = useUserState();
   const {TokenState} = useTokenState();
   const router = useRouter();
@@ -44,12 +45,12 @@ const ArticleChoice: React.FC<Props> =({article})=>{
 
   return(
     <>
-        <div className="group flex py-2 border-b bg-white"  key="hiroto">
-          <div>
+        <Box className="w-full group flex py-2 px-1 border-b bg-white"  key="hiroto">
+          <Box>
             <Link href={`/article/${article?.id}`}>
               <h2 className="text-lg font-semibold  text-black line-clamp-4 hover:text-blue-500">{article?.title}</h2>
               </Link>
-              <ul className="flex gap-1 my-2 text-xs">
+              <ul className="flex gap-1 my-2 text-xs flex-row flex-wrap">
                 {tags[0] ?
                   tags.map((tag: any, index: any)=>{
                     return (
@@ -65,14 +66,14 @@ const ArticleChoice: React.FC<Props> =({article})=>{
                   })
                   : ""}
               </ul> 
-            <div className="flex gap-4 text-xs mt-3">
+            <Box className="flex gap-4 text-xs mt-3">
             <Link href={`/user/${article?.id_name}`}>{article?.name}</Link>
             <h2>{timee(article ? article.created_at : "")}</h2>
-            </div>
-          </div>
-        </div>   
+            </Box>
+          </Box>
+        </Box>   
     </>
   )
-}
+})
 
 export default ArticleChoice

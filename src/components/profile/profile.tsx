@@ -22,7 +22,8 @@ export const Profile:React.FC<Props>=({followed_num})=> {
     .get('/logout')
     .then((res: AxiosResponse) => {
       setUserState(null);
-      setTokenState(null)
+      setTokenState(null);
+      localStorage.removeItem('wasLogin');
       router.push("/")
     })
       .catch((error: AxiosError)=> {

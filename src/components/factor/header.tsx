@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState} from "react";
 import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/router";
@@ -7,8 +7,8 @@ import {
   TextField,
   Box,
 } from "@mui/material";
-import {useUserState} from "./../hooks/useUser"
-import {deleteSpaceStr} from "./../libs/helper"
+import {useUserState} from "../../hooks/useUser"
+import {deleteSpaceStr} from "../../libs/helper"
 
 export const Header:React.FC = () => {
   const router =useRouter();
@@ -23,7 +23,7 @@ export const Header:React.FC = () => {
         </Link>
         <Box className="mt-1">
           <TextField
-            id="search-bar"
+            id="search"
             className="text w-96"
             onInput={()=>{}}
             variant="outlined"
@@ -69,7 +69,7 @@ export const Header:React.FC = () => {
           >マイページ</button>}
           <button
           className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-500"
-          onClick={()=>{router.push("/create")}}
+          onClick={()=>{router.push(userState ? "/create" : "/login")}}
           >記事を投稿</button>
         </Box>
       </header>

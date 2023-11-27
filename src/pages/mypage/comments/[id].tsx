@@ -7,9 +7,11 @@ import CommentChoice from "@/components/choices/commentChoice";
 import { useRouter } from "next/router";
 import NotFoundItems from "./../../../components/notFound/notFoundItems"
 import {useFetch} from "./../../../hooks/useFetch"
+import {useRequireLogin} from "../../../hooks/useRequireLogin"
 import {
   Box
 } from "@mui/material";
+import CommentBar from "./../../../components/factor/comment_bar"
 import Frame from "./../../../components/frame/frame"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const userID: any = context.params?.id;
@@ -36,6 +38,7 @@ const Mypage: NextPage<Factor> = ({comments, userID}) => {
   const {userState} = useUserState()
   const {data: followers, error: followersError, mutate: followersMutate} = useFetch(`/followed_users/${userID}`)
   const router = useRouter()
+  useRequireLogin(userID)
   return (
     <>
       <Profile followed_num={followers ? followers.length: 0}></Profile>
@@ -45,6 +48,7 @@ const Mypage: NextPage<Factor> = ({comments, userID}) => {
         <button className="pb-2 border-b-2 border-blue-500">コメント</button>
         <button onClick={()=>{router.push(`/mypage/setting`)}} className="pb-2">設定</button>
       </Box>
+      <CommentBar comment_number={comments ? comments.length : 0}></CommentBar>
       <Frame>
         <ul>
           {comments ?

@@ -66,7 +66,7 @@ export default function SignIn() {
             console.log("seccess")
             setUserState(res.data)
             setTokenState(res.data.token)
-            console.log("誰とも取り替えたくない")
+            localStorage.setItem('wasLogin', "true")
             router.push("/")
           })
           .catch((err: any) => {

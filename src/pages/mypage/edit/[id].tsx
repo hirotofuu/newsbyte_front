@@ -4,11 +4,11 @@ import { useState, ChangeEvent, useEffect } from "react";
 import { getFunc } from "@/libs/getAFunc";
 import { AxiosError, AxiosResponse } from 'axios';
 import { useRouter } from "next/router";
-import ArticleChoice from "@/components/choices/articleChoice";
 import {makeTags} from "./../../../libs/helper"
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
 import {useFetch} from "./../../../hooks/useFetch"
+import {useRequireLogin} from "../../../hooks/useRequireLogin"
 import axios from "./../../../libs/axios"
 import {
   FormControl,
@@ -183,6 +183,8 @@ const create_under_save = () =>{
   const onChange = (value: any) => {
     SetSubmitContent({...submitContent, content:value});
   };
+
+  useRequireLogin(article.user_id);
 
   return (
 <>

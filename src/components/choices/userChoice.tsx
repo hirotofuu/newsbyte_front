@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {useUserState, useTokenState} from "../../hooks/useUser"
+import React from "react";
 import { useRouter } from "next/router";
 import { putt } from "@/libs/putFunc";
 import { deletee } from "@/libs/deleteFunc";
@@ -11,7 +12,7 @@ type Props ={
 }
 
 
-const UserChoice:React.FC<Props> =({user})=>{
+const UserChoice:React.FC<Props> =React.memo(({user})=>{
   const {userState, setUserState}=useUserState()
   const {TokenState}=useTokenState()
   const router = useRouter()
@@ -59,6 +60,6 @@ const UserChoice:React.FC<Props> =({user})=>{
 
     </>
   )
-}
+})
 
 export default UserChoice

@@ -1,4 +1,4 @@
-import Header from "../components/header"
+import Header from "../components/factor/header"
 import * as React from 'react';
 import Link from '@mui/material/Link';
 import { useRouter } from "next/router";
