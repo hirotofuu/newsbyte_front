@@ -16,6 +16,8 @@ import {
   Container,
   Alert,
 } from "@mui/material";
+import { useUserState, useTokenState } from '@/hooks/useUser';
+import { useRouter } from 'next/router';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function Copyright(props: any) {
@@ -40,7 +42,9 @@ export default function SignIn() {
     email: "",
     password: ""
   })
-
+  const router = useRouter()
+  const {setUserState} = useUserState()
+  const {setTokenState} = useTokenState()
   const [passwordComfirm, setPasswordComfirm] = useState("")
 
   const [validation, setValidation] = useState("")
@@ -56,11 +60,11 @@ export default function SignIn() {
       return ;
     }
     if(!pattarn.test(payload.user_name)){
-      setValidation("正しい形式でユーザーIDを入力してください")
+      setValidation("正しい形式(30字以内の半角英数字)でユーザーIDを入力してください")
       return ;
     }
     if(!Passpattarn.test(payload.password)){
-      setValidation("正しい形式でパスワードを入力してください")
+      setValidation("正しい形式(8文字以上30文字以下の半角英数字)でパスワードを入力してください")
       return ;
     }
     if(payload.password != passwordComfirm){
@@ -72,8 +76,13 @@ export default function SignIn() {
           .then((res: AxiosResponse) => {
             if(res.data.error){
               setValidation(res.data.message)
+              return ;
             }
-            console.log("rrr")
+            setUserState(res.data)
+            setTokenState(res.data.token)
+            localStorage.setItem('wasLogin', "true")
+            router.push("/")
+            console.log(res.data)
           })
           .catch((err: any) => {
             setValidation(err.response?.data?.message)
@@ -121,6 +130,7 @@ export default function SignIn() {
               fullWidth
               id="text"
               label="ユーザーID"
+              placeholder='30字以内の半角英数字'
               name="userId"
               value={payload.user_name}
               onChange={e => {
@@ -133,6 +143,7 @@ export default function SignIn() {
               fullWidth
               name="password"
               label="パスワード"
+              placeholder='半角英数字8文字以上30文字以下'
               type="password"
               id="password"
               autoComplete="current-password"
@@ -147,6 +158,7 @@ export default function SignIn() {
               fullWidth
               name="password"
               label="パスワード確認"
+              placeholder='半角英数字8文字以上30文字以下'
               type="password"
               id="password"
               value={passwordComfirm}

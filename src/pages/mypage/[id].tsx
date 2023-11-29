@@ -12,6 +12,10 @@ import {
   Box,
   CircularProgress
 } from "@mui/material";
+import ArticleIcon from '@mui/icons-material/Article';
+import CreateIcon from '@mui/icons-material/Create';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import Profile from "../../components/profile/profile"
 import MypageBox from "../../components/factor/mypage_box"
 import Frame from "./../../components/frame/frame"
@@ -59,6 +63,10 @@ const Mypage: NextPage<Factor> = ({userID}) => {
       setTrashValidate("一つ以上記事を選びましょう")
       return ;
     }
+    const result = confirm("本当に削除しますか？")
+    if (!result) {
+      return;
+    }
     setIsdelete(true);
     let res: number = await postt("/user/delete_some_articles", JSON.stringify(checkedValues), TokenState ? TokenState : " ")
     if (res==1){
@@ -77,10 +85,10 @@ const Mypage: NextPage<Factor> = ({userID}) => {
     <>
       <Profile followed_num={followers ? followers.length: 0}></Profile>
       <Box className="flex justify-center gap-12 mt-6 font-semibold border-b">
-        <button className="pb-2 border-b-2 border-blue-500">記事</button>
-        <button onClick={()=>{router.push(`/mypage/draft/${userState?.id}`)}} className="pb-2">下書き</button>
-        <button  onClick={()=>{router.push(`/mypage/comments/${userState?.id}`)}}  className="pb-2">コメント</button>
-        <button onClick={()=>{router.push(`/mypage/setting`)}} className="pb-2">設定</button>
+        <button className="pb-2 border-b-2 border-blue-500 text-blue-500"><ArticleIcon></ArticleIcon></button>
+        <button onClick={()=>{router.push(`/mypage/draft/${userState?.id}`)}} className="pb-2"><CreateIcon></CreateIcon></button>
+        <button  onClick={()=>{router.push(`/mypage/comments/${userState?.id}`)}}  className="pb-2"><ChatBubbleIcon></ChatBubbleIcon></button>
+        <button onClick={()=>{router.push(`/mypage/setting`)}} className="pb-2"><SettingsApplicationsIcon></SettingsApplicationsIcon></button>
       </Box>
       <MypageBox onDelete={onDelete} trashMessage={trashValidate} isDelete={isDelete} article_number={A ? A.length : 0}></MypageBox>
       <Frame >

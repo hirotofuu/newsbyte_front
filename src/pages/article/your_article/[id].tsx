@@ -14,6 +14,7 @@ import {putt} from "./../../../libs/putFunc"
 import {deletee} from "./../../../libs/deleteFunc"
 import {Comment} from "./../../../types/article"
 import {timee, makeTags, deleteSpaceStr} from "./../../../libs/helper"
+import {useRequireLogin} from "../../../hooks/useRequireLogin"
 import {
   Box,
   Container,
@@ -134,7 +135,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
     window.scroll(0, bottom);
   }
 
-
+  useRequireLogin(article.user_id)
 
 
   return (

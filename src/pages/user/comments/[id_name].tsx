@@ -4,6 +4,7 @@ import {getFunc} from "../../../libs/getAFunc"
 import { useRouter } from "next/router";
 import ProfileOne from "../../../components/profile/profile_one"
 import {useFetch} from "./../../../hooks/useFetch"
+import { useUserState } from "@/hooks/useUser";
 import {Comment} from "../../../types/article"
 import {User} from "../../../types/user"
 import {
@@ -44,6 +45,7 @@ type Factor = {
 
 
 const Mypage: NextPage<Factor> = ({comments, user}) => {
+  const {userState} = useUserState()
   const {data: followed_user, error: followedError, mutate: followedMutate} = useFetch(`/followed_users/${user.id}`)
   console.log(followed_user)
   const router = useRouter()
@@ -61,7 +63,7 @@ const Mypage: NextPage<Factor> = ({comments, user}) => {
                   comments.map((comment: any, index: any)=>{
                     return (
                       <li className="border-b-2 mt-2" key={index}>
-                        <Link href={`/article/${comment.article_id}`} className="p-2 font-semibold text-sm text-orange-700 hover:text-blue-500">
+                        <Link href={userState && userState.id ==comment.article_user_id ? `/article/your_article/${comment.article_id}` : `/article/${comment.article_id}`} className="p-2 font-semibold text-sm text-orange-700 hover:text-blue-500">
                           {comment.article_title}
                         </Link>
                         <CommentChoice comment={comment} key={index}></CommentChoice>

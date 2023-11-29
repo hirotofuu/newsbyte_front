@@ -68,10 +68,10 @@ const Search: NextPage<Factor> = ({query}) => {
               query: {q :query} //検索クエリ
             });
           }}  className={"p-2 rounded-3xl  hover:bg-gray-300 mr-2"}>
-              <span>articles</span>
+              <span>記事</span>
           </button>
           <button className={`p-2 rounded-3xl hover:bg-gray-300 `}>
-            <span className="text-blue-700">users</span>
+            <span className="text-blue-700">ユーザー</span>
           </button>
         </Box>
         <h2 className="mt-6 border-b-2">{Quser ? Quser.length : 0}件</h2>

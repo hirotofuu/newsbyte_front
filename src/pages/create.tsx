@@ -44,7 +44,7 @@ export default function Create() {
   const {mutate: Amutation} = useFetch(`/user_articles/${userState?.id}`)
   const [submitContent, SetSubmitContent] = useState<submission>({
     title: "",
-    medium: 0,
+    medium: 1,
     tags_in: [],
     content: "",
     comment_ok: true,
@@ -173,7 +173,6 @@ axios.
           SetSubmitContent({...submitContent, medium:Number(e.target.value)});
         }}
       >
-        <MenuItem value={0}></MenuItem>
         <MenuItem value={1}>漫画</MenuItem>
         <MenuItem value={2}>漫画雑誌</MenuItem>
         <MenuItem value={3}>アニメ</MenuItem>

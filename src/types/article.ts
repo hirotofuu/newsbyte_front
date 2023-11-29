@@ -21,8 +21,8 @@ export type Comment={
   user_id: number,
   user_name: string,
   article_id: number,
+  article_user_id: string,
   name?: string,
-  avatar?: string,
   created_at: string,
   updated_at: string
 };

@@ -1,11 +1,16 @@
-import Header from "../components/factor/header"
+import { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import * as React from 'react';
 import Link from '@mui/material/Link';
+import Frame from "./../components/frame/frame"
 import { useRouter } from "next/router";
 import CssBaseline from '@mui/material/CssBaseline';
 import { useState } from "react";
 import {deleteSpaceStr} from "./../libs/helper"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { getFunc } from '@/libs/getAFunc';
+import { Article } from "./../types/article"
+import { useFetch } from '@/hooks/useFetch';
+import ArticleChoice from "./../components/choices/articleChoice"
 import {
   Container,
   Box,
@@ -14,9 +19,11 @@ import {
 } from "@mui/material";
 
 
+
 export default function Home() {
   const defaultTheme = createTheme();
   const [searchWord, setSearchWord] = useState("")
+  const {data: A, error: Aerror, mutate: Amutation} = useFetch(`/articles`)
   const router = useRouter()
   
   return (
@@ -36,7 +43,7 @@ export default function Home() {
             </Typography>
             <Typography variant="h5" component="h2" gutterBottom>
               {'映像作品から漫画、小説までブログサイト「newsbyte」へようこそ'}<br></br>
-              このサイトについてはこちらの<Link href="/" className="text-blue-500">リンク</Link>をご覧ください
+              このサイトについてはこちらの<Link href="/detail" className="text-blue-500">リンク</Link>をご覧ください
             </Typography>
             <section className="mt-10">
                 <TextField
@@ -60,6 +67,18 @@ export default function Home() {
                 }}   className="p-1 border-1 border-black bg-gray-300 ml-1">記事を検索</button>
               </section>
             </Container>
+            <Box className="mt-8 mb-20 border-t-2 p-8">
+              <Frame>
+                <h1 className="font-bold mb-4">一覧</h1>
+                { A ?
+                A.map((article: Article, index: number)=>{
+                  return (
+                    <ArticleChoice article={article} key={index}></ArticleChoice>
+                  )
+                })
+                : ""}
+              </Frame>
+            </Box>
             <Box
               component="footer"
               sx={{

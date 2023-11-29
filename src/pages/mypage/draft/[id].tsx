@@ -13,6 +13,10 @@ import {
   CircularProgress,
   Box
 } from "@mui/material";
+import ArticleIcon from '@mui/icons-material/Article';
+import CreateIcon from '@mui/icons-material/Create';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import Frame from "./../../../components/frame/frame";
 import NotFoundItems from "./../../../components/notFound/notFoundItems";
 import EArticleChoice from "./../../../components/choices/user_A_choice";
@@ -27,7 +31,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 type Factor = {
-  articles: Article[] 
   userID: any
 }
 
@@ -42,7 +45,7 @@ const Mypage: NextPage<Factor> = ({userID}) => {
   const [trashValidate, setTrashValidate] = useState("");
   const [isDelete, setIsDelete] = useState(false);
   const {data: followers, error: followersError, mutate: followersMutate} = useFetch(`/followed_users/${userID}`)
-  const {data: A, error: Aerror, mutate: Amutation} = useFetch(`/user_save_articles/${userID}`)
+  const {data: A, error: Aerror, mutate: Amutation} = useFetch(`/user_save_articles`)
   const router = useRouter()
 
   const handleChange = (e: any) => {
@@ -57,10 +60,14 @@ const Mypage: NextPage<Factor> = ({userID}) => {
 
 
   const onDelete = async() => {
-    if(!userState || userState?.id!=userID)return
+    if(!userState)return
     if(!checkedValues.length){
       setTrashValidate("一つ以上記事を選びましょう")
       return ;
+    }
+    const result = confirm("本当に削除しますか？")
+    if (!result) {
+      return;
     }
     setIsDelete(true);
     let res: number = await postt("/user/delete_some_articles", JSON.stringify(checkedValues), TokenState ? TokenState : " ")
@@ -80,10 +87,10 @@ const Mypage: NextPage<Factor> = ({userID}) => {
     <>
       <Profile followed_num={followers ? followers.length: 0}></Profile>
       <Box className="flex justify-center gap-12 mt-6 font-semibold border-b">
-        <button onClick={()=>{router.push(`/mypage/${userState?.id}`)}}  className="pb-2">記事</button>
-        <button className="pb-2 border-b-2 border-blue-500">下書き</button>
-        <button onClick={()=>{router.push(`/mypage/comments/${userState?.id}`)}}  className="pb-2">コメント</button>
-        <button onClick={()=>{router.push(`/mypage/setting`)}} className="pb-2">設定</button>
+        <button onClick={()=>{router.push(`/mypage/${userState?.id}`)}}  className="pb-2"><ArticleIcon></ArticleIcon></button>
+        <button className="pb-2 border-b-2 border-blue-500 text-blue-500"><CreateIcon></CreateIcon></button>
+        <button onClick={()=>{router.push(`/mypage/comments/${userState?.id}`)}}  className="pb-2"><ChatBubbleIcon></ChatBubbleIcon></button>
+        <button onClick={()=>{router.push(`/mypage/setting`)}} className="pb-2"><SettingsApplicationsIcon></SettingsApplicationsIcon></button>
       </Box>
       <MypageBox onDelete={onDelete} trashMessage={trashValidate} isDelete={isDelete} article_number={A ? A.length : 0}></MypageBox>
       <Frame>

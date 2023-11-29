@@ -64,7 +64,7 @@ const Search: NextPage<Factor> = ({query}) => {
         </Box>
         <Box className="mt-4">
           <button className={"p-2 rounded-3xl  hover:bg-gray-300 mr-2"}>
-              <span className="text-blue-700">articles</span>
+              <span className="text-blue-700">記事</span>
           </button>
           <button onClick={()=>{
             router.push({
@@ -72,7 +72,7 @@ const Search: NextPage<Factor> = ({query}) => {
               query: {q :query} //検索クエリ
             });
           }}  className={`p-2 rounded-3xl hover:bg-gray-300 `}>
-            <span>users</span>
+            <span>ユーザー</span>
           </button>
         </Box>
         <h2 className="mt-6 border-b-2">{Qarticles ? Qarticles.length : 0}件</h2>
