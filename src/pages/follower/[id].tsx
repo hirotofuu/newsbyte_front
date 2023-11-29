@@ -4,6 +4,7 @@ import NotFoundItems from "./../../components/notFound/notFoundItems"
 import UserChoice from "@/components/choices/userChoice";
 import {useFetch} from "./../../hooks/useFetch"
 import { Box } from '@mui/material';
+import Frame from "./../../components/frame/frame"
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const id: any = context.params?.id;
@@ -35,16 +36,22 @@ const Search: NextPage<Factor> = ({id}) => {
   const {data: followed_user, error: followedError, mutate: followedMutate} = useFetch(`/followed_users/${id}`)
   return (
     <>
-      <Box className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6  mr-auto ml-auto px-1">          
-        {followed_user ?
-          followed_user.map((user: any, index: any)=>{
-            return (
-              <UserChoice user={user} key={index}></UserChoice>
-            )
-          })
-        : <NotFoundItems></NotFoundItems>}
-      </Box>
-    </>
+      <Frame>
+        <Box className="flex justify-between p-3 mt-4 bg-gray-300">
+          <button onClick={()=>{router.back()}} className="text-blue-500">戻る</button>
+          <h1>フォロワー</h1>
+        </Box>
+        <Box className="px-1">          
+          {followed_user ?
+            followed_user.map((user: any, index: any)=>{
+              return (
+                <UserChoice user={user} key={index}></UserChoice>
+              )
+            })
+          : <NotFoundItems></NotFoundItems>}
+        </Box>
+      </Frame>
+      </>
   );
 };
 

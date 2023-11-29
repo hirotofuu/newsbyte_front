@@ -12,6 +12,7 @@ import {
   Box
 } from "@mui/material";
 import Frame from "./../components/frame/frame"
+import { Article } from "@/types/article";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const query: any = context.query.q;
@@ -76,7 +77,7 @@ const Search: NextPage<Factor> = ({query}) => {
         </Box>
         <h2 className="mt-6 border-b-2">{Qarticles ? Qarticles.length : 0}件</h2>
         {typeof Qarticles !== 'undefined' ? Qarticles ?
-          Qarticles.map((article: any, index: any)=>{
+          Qarticles.map((article: Article, index: number)=>{
             return (
               <ArticleChoice article={article} key={index}></ArticleChoice>
             )

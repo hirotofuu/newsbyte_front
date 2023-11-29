@@ -14,7 +14,7 @@ type Props ={
 
 
 
-const CommentChoice: React.FC<Props> =React.memo(({comment, onReply})=>{
+const YourCommentChoice: React.FC<Props> =React.memo(({comment, onReply})=>{
   const {userState} = useUserState()
   const {TokenState} = useTokenState()
   const [isLive, setIsLive] = useState(true)
@@ -44,7 +44,7 @@ const CommentChoice: React.FC<Props> =React.memo(({comment, onReply})=>{
         <Box className ="">
             <div className="flex mt-1 text-xs">
               <p className="text-sm font-medium mr-6"> <Link href={userState?.id!=comment?.user_id ? `/user/${comment?.name}` : `/mypage/${userState?.id}`} className="font-semibold">@{comment?.name}</Link>  <span className="font-normal text-gray-500">| {timee(comment ? comment.created_at : "")}</span></p>
-              {userState && (userState.id == comment?.user_id) ? <button className=" text-gray-500" onClick={deleteComment}>削除</button> : ""}
+              <button className=" text-gray-500" onClick={deleteComment}>削除</button>
 
             </div>
             <p dangerouslySetInnerHTML={{
@@ -59,4 +59,4 @@ const CommentChoice: React.FC<Props> =React.memo(({comment, onReply})=>{
   )
 })
 
-export default CommentChoice
+export default YourCommentChoice

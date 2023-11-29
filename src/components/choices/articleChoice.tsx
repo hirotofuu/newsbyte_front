@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import {Article} from "../../types/article"
 import {timee} from "./../../libs/helper"
 import {useUserState, useTokenState} from "./../../hooks/useUser"
-import {deletee} from '@/libs/deleteFunc'
 import {useFetch} from "./../../hooks/useFetch"
 import { makeTags } from "./../../libs/helper";
 import { useRouter } from "next/router";
@@ -17,38 +16,15 @@ type Props ={
 
 const ArticleChoice: React.FC<Props> =React.memo(({article})=>{
   const {userState} = useUserState();
-  const {TokenState} = useTokenState();
   const router = useRouter();
-  const [isLive, setIsLive] = useState(true);
-  const {mutate: DAmutation} = useFetch(`/user_save_articles/${article?.user_id}`)
-  const {mutate: Amutation} = useFetch(`/user_articles/${article?.user_id}`)
   const [tags] = useState(makeTags(article ? article?.tagss_out : "{}"))
-  const deleteComment = async() => {
-    if(!userState)return
-    let res: number = await deletee(`/user/delete_articles/${article?.id}`, TokenState ? TokenState : " ")
-    if(article?.is_open_flag){
-      Amutation()
-    }else{
-      DAmutation()
-    }
-    if (res==1){
-      console.log("deleted")
-      setIsLive(false)
-    }
-  }
-
-  if(!isLive){
-    return(
-      <h1>削除済み ({article?.title})</h1> 
-    )
-  }
 
   return(
     <>
-        <Box className="w-full group flex py-2 px-1 border-b bg-white"  key="hiroto">
+        <Box className="w-full group flex p-3 border-b bg-white"  key="hiroto">
           <Box>
-            <Link href={`/article/${article?.id}`}>
-              <h2 className="text-lg font-semibold  text-black line-clamp-4 hover:text-blue-500">{article?.title}</h2>
+            <Link href={userState && userState.id == article?.user_id ? `/article/your_article/${article?.id}` : `/article/${article?.id}`}>
+              <h2 className="font-semibold  text-black line-clamp-4 hover:text-blue-500">{article?.title}</h2>
               </Link>
               <ul className="flex gap-1 my-2 text-xs flex-row flex-wrap">
                 {tags[0] ?

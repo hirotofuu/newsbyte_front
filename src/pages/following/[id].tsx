@@ -4,6 +4,7 @@ import {getFunc} from "./../../libs/getAFunc"
 import {User} from "./../../types/user"
 import UserChoice from "@/components/choices/userChoice";
 import NotFoundItems from "./../../components/notFound/notFoundItems"
+import Frame from "./../../components/frame/frame"
 import { Box } from '@mui/material';
 export const getStaticProps: GetStaticProps = async (context) => {
   const id: any = context.params?.id;
@@ -35,15 +36,21 @@ const Search: NextPage<Factor> = ({users}) => {
   const router = useRouter()
   return (
     <>
-      <Box className="xl:w-1/2 lg:w-1/2 base:w-5/6 sm:w-5/6  mr-auto ml-auto px-1">          
-        {users ?
-          users.map((user: any, index: any)=>{
-            return (
-              <UserChoice user={user} key={index}></UserChoice>
-            )
-          })
-        : <NotFoundItems></NotFoundItems>}
-      </Box>
+      <Frame>
+        <Box className="flex justify-between p-3 mt-4 bg-gray-300">
+          <button onClick={()=>{router.back()}} className="text-blue-500">戻る</button>
+          <h1>フォロワー</h1>
+        </Box>
+        <Box className="">          
+          {users ?
+            users.map((user: any, index: any)=>{
+              return (
+                <UserChoice user={user} key={index}></UserChoice>
+              )
+            })
+          : <NotFoundItems></NotFoundItems>}
+        </Box>
+      </Frame>
     </>
   );
 };

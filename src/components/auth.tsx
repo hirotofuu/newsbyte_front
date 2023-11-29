@@ -24,6 +24,7 @@ export const Auth:React.FC<Props> = ({children}) => {
         .get('/refresh_next')
         .then((res: AxiosResponse) => {
           setTokenState(res.data.access_token)
+          console.log("youyou")
         })
             .catch((error: AxiosError)=> {
               console.log("user is not logged in", error);

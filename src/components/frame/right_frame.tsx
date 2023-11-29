@@ -8,7 +8,7 @@ const RightFrame: React.FC<Props> =({children})=>{
   
   return(
     <>
-      <Box className="xl:block hidden w-72 mr-auto">
+      <Box className="xl:block lg:block hidden w-72 mr-auto">
         {children}
       </Box>
 

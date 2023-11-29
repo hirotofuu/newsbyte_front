@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {User} from "../../types/user"
 import { useRouter } from "next/router";
 import {
@@ -8,6 +8,7 @@ import Frame from "./../frame/frame"
 import {useUserState, useTokenState} from "../../hooks/useUser"
 import { putt } from "@/libs/putFunc";
 import { deletee } from "@/libs/deleteFunc";
+import {textToLink} from "./../../libs/helper"
 type Props = {
   user: User
   followed_num: number
@@ -57,7 +58,9 @@ export const ProfileOne:React.FC<Props>=({user, followed_num})=> {
                 <Button color="secondary" onClick={onFollow}>フォローする</Button>:""}
           </div>
           </h1>
-          <p className="text-center text-xs">{user.profile}</p>
+          <p dangerouslySetInnerHTML={{
+              __html: textToLink(user.profile ? `${user.profile}` : '')
+            }} className="ext-center text-xs"></p>
       </Frame>
      
     </>

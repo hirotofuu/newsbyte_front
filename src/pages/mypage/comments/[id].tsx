@@ -50,7 +50,7 @@ const Mypage: NextPage<Factor> = ({comments, userID}) => {
       </Box>
       <CommentBar comment_number={comments ? comments.length : 0}></CommentBar>
       <Frame>
-        <ul>
+        <ul className="mb-10">
           {comments ?
                   comments.map((comment: any, index: any)=>{
                     return (

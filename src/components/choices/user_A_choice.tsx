@@ -18,8 +18,8 @@ const EArticleChoice: React.FC<Props> =React.memo(({article})=>{
   return(
     <>
           <div>
-            <Link href={`/article/${article?.id}`}>
-              <h2 className="text-md font-semibold xl:text-base lg:text-base md:text-base text-sm  text-black line-clamp-4 hover:text-blue-500">{article?.title}</h2>
+            <Link href={`/article/your_article/${article?.id}`}>
+              <h2 className="font-semibold xl:text-base lg:text-base md:text-base text-sm  text-black line-clamp-4 hover:text-blue-500">{article?.title}</h2>
             </Link>
               <ul className="flex gap-1 my-2 text-xs  flex-row flex-wrap">
                 {tags[0] ?

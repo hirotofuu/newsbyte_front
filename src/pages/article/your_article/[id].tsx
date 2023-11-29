@@ -1,50 +1,42 @@
 import Link from "next/link";
-import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
-import { useState } from "react";
+import { NextPage, GetServerSideProps } from 'next';
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import {getFunc} from "./../../libs/getAFunc"
-import {useUserState, useTokenState} from "./../../hooks/useUser" 
-import {Article} from "./../../types/article"
-import LeftFrame from "../../components/frame/left_frame"
-import RightFrame from "../../components/frame/right_frame"
+import {getFunc} from "./../../../libs/getAFunc"
+import {useUserState, useTokenState} from "./../../../hooks/useUser" 
+import {Article} from "./../../../types/article"
+import LeftFrame from "../../../components/frame/left_frame"
+import RightFrame from "../../../components/frame/right_frame"
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
-import {useFetch} from "./../../hooks/useFetch"
-import {putt} from "./../../libs/putFunc"
-import {deletee} from "./../../libs/deleteFunc"
-import {Comment} from "./../../types/article"
-import {timee, makeTags, deleteSpaceStr, textToLink} from "./../../libs/helper"
+import {useFetch} from "./../../../hooks/useFetch"
+import {putt} from "./../../../libs/putFunc"
+import {deletee} from "./../../../libs/deleteFunc"
+import {Comment} from "./../../../types/article"
+import {timee, makeTags, deleteSpaceStr} from "./../../../libs/helper"
 import {
   Box,
   Container,
   TextareaAutosize,
   Chip,
-  Button
 } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ArticletBar from "./../../components/factor/article_bar"
-import CommentChoice from "./../../components/choices/commentChoice"
-import NotFoundItems from "./../../components/notFound/notFoundItems"
+import YoutArticletBar from "./../../../components/factor/your_article_bar"
+import YourCommentChoice from "./../../../components/choices/your_comment_choice"
+import NotFoundItems from "./../../../components/notFound/notFoundItems"
 
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const id: any = context.params?.id;
-  const article: any = await getFunc(`/article/${id}`)
+  const article: Article = await getFunc(`/edit_article/${id}`)
   
   return{
     props: {
-      article : article ? article : null,
+      article : article ,
     },
-    revalidate: 120
   };
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [], // アプリのビルド時にはパスに何が入るかが分からないので空でOK
-    fallback: 'blocking', // 👈 ポイント
-  };
-};
 
 
 type Factor = {
@@ -97,9 +89,6 @@ type CommentForm = {
 }
 
 const Mypage: NextPage<Factor> = ({article}) => {
-  if(!article)return (
-    <h1>現在この記事は非公開です</h1>
-  )
   const {data: good, error: goodError, mutate: goodMutate} = useFetch(`/good_article/${article.id}`)
   const {data: comments, error: commentError, mutate: commentMutate} = useFetch(`/article_comments/${article.id}`)
   const {userState, setUserState} = useUserState()
@@ -137,27 +126,6 @@ const Mypage: NextPage<Factor> = ({article}) => {
     }
   }
 
-  const onFollow = async() => {
-    if(!userState)return
-    let res: number = await putt(`/user/insert_follow/${article.user_id}`, null, TokenState ? TokenState : " ")
-    if (res==1){
-      let demo: number[]=[]
-      if(userState.following_user_ids){demo=[...userState.following_user_ids]}
-      demo.push(Number(article.user_id))
-      setUserState({...userState, following_user_ids: demo})
-      console.log(userState.following_user_ids)
-    }
-  }
-  
-  const onDeleteFollow = async() => {
-    if(!userState)return
-    let res: number = await deletee(`/user/delete_follow/${article.user_id}`, TokenState ? TokenState : " ")
-    if (res==1){
-      let demo: number[]=[...userState.following_user_ids]
-      demo = demo.filter((i)=> i != Number(article.user_id))
-      setUserState({...userState, following_user_ids: demo})
-    }
-  }
 
   const onReply = (id_name: string) => {
     setCommentForm({...commentForm, comment: commentForm.comment+`@${id_name}`})
@@ -167,9 +135,11 @@ const Mypage: NextPage<Factor> = ({article}) => {
   }
 
 
+
+
   return (
     <>
-      <ArticletBar content={article.content} id_name={article.id_name} good={good} onDeleteGood={onGoodDelete} onGood={onGood}></ArticletBar>
+      <YoutArticletBar content={article.content} id={article.id} user_id={article.user_id} id_name={article.id_name} good={good} onDeleteGood={onGoodDelete} onGood={onGood}></YoutArticletBar>
       <Box className="flex p-4 mt-5">
         <LeftFrame>
           <Box className="mb-10">
@@ -215,7 +185,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
             {comments ?
               comments.map((comment: Comment, index: number)=>{
                 return (
-                  <CommentChoice comment={comment} onReply={onReply} key={index}></CommentChoice>
+                  <YourCommentChoice comment={comment} onReply={onReply} key={index}></YourCommentChoice>
                 )
               })
             : <NotFoundItems></NotFoundItems>}
@@ -235,18 +205,9 @@ const Mypage: NextPage<Factor> = ({article}) => {
         </LeftFrame>
         <RightFrame>
           <Container className=" sticky top-10">
-            <Box className="p-3  rounded-md bg-gray-100">
-                <Link href={userState?.id != Number(article.user_id) ? `/user/${article.id_name}` : `/mypage/${userState?.id}`}>
-                  <p className="mb-1 text-xl font-semibold">{article.name}</p> 
-                </Link>
-                {!userState || !TokenState ?
-                <Button color="secondary" onClick={()=>{router.push("/login")}}>フォローする</Button> 
-                : userState.id != Number(article.user_id) ? userState.following_user_ids && userState.following_user_ids.length ? userState.following_user_ids.filter((i)=>{i==Number(article.user_id)}) ? <Button color="secondary" onClick={onDeleteFollow}>フォロー中</Button> : 
-                <Button color="secondary" onClick={onFollow}>フォローする</Button> :
-                <Button color="secondary" onClick={onFollow}>フォローする</Button>:""}
-                <p dangerouslySetInnerHTML={{
-                  __html: textToLink(article.profile ? `${article.profile}` : '')
-                }} className="ext-center text-xs"></p>
+            <Box className="p-4 rounded-md bg-gray-100">
+                <Link className="block hover:text-blue-500" href={`/mypage/${userState?.id}`}>マイページ</Link>
+                <Link className="block hover:text-blue-500" href={`/mypage/edit/${article.id}`}>編集</Link>
             </Box>
             <Box className="mt-8">
               <Box className="p-3 bg-gray-100 rounded-md overflow-auto max-h-96">

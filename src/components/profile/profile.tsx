@@ -1,14 +1,14 @@
-import React, { useState, useMemo } from "react";
-import Link from "next/link";
-import {
-  Button
-} from "@mui/material";
+import React, { useState } from "react";
 import Frame from "./../frame/frame"
 import {useUserState, useTokenState} from "../../hooks/useUser"
 import axios from "../../libs/axios"
 import { AxiosResponse, AxiosError } from 'axios';
 import { useRouter } from "next/router";
-
+import {
+  Button
+} from "@mui/material";
+import CreateIcon from '@mui/icons-material/Create';
+import UserEditModal from "./../modal/user_edit_modal"
 type Props ={
   followed_num: number
 }
@@ -16,6 +16,7 @@ type Props ={
 export const Profile:React.FC<Props>=({followed_num})=> {
   const {userState, setUserState}=useUserState()
   const {setTokenState} = useTokenState()
+  const [isModal, setIsModal] = useState(false)
   const router = useRouter()
   const logout = () =>{
     axios
@@ -36,9 +37,10 @@ export const Profile:React.FC<Props>=({followed_num})=> {
 
   return(
     <>
+      <UserEditModal isModal={isModal} setIsModal={()=>{setIsModal(false)}}></UserEditModal>
       <Frame>
-          <h1 className="mt-3 mb-1 text-2xl font-bold text-center">{userState?.user_name}</h1>
-          <p className="text-center mb-2">@{userState?.id_name}</p>
+          <h1 className="mt-10 mb-1 text-2xl font-bold text-center">{userState?.user_name}</h1>
+          <p className="text-center mb-2">@{userState?.id_name}<button className="text-xm p-2" onClick={()=>{setIsModal(true)}}><CreateIcon></CreateIcon></button></p>
           <h1 className="flex gap-4 justify-center mb-2">
           <div className="flex text-sm">
             <Button onClick={()=>{
@@ -51,7 +53,6 @@ export const Profile:React.FC<Props>=({followed_num})=> {
           </div>
           </h1>
          <p className="text-center text-xs ">{userState?.profile}</p> 
-         <p className="text-center mt-4"><Link href="/mypage/edit_profile" className="">プロフィール編集</Link></p> 
       </Frame>
      
     </>

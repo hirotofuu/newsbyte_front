@@ -76,9 +76,9 @@ const Search: NextPage<Factor> = ({query}) => {
         </Box>
         <h2 className="mt-6 border-b-2">{Quser ? Quser.length : 0}件</h2>
         {typeof Quser!=='undefined' ? Quser ?
-          Quser.map((user: any, index: any)=>{
+          Quser.map((user: User, index: number)=>{
             return (
-              <UserChoice user={user}></UserChoice>
+              <UserChoice user={user} key={index}></UserChoice>
             )
           })
         : <NotFoundItems></NotFoundItems> : <CircularProgress></CircularProgress>}

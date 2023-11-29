@@ -33,5 +33,17 @@ export function deleteSpaceStr(data: string){
 }
 
 
+export const textToLink = (text: string) => {
+  const regexp_url = /(https?:\/\/[\w/:%#\$&\?\(\)~\.=\+\-]+)/g;
+  let linkedText = text.replace(regexp_url, '<a href="$1" target="_blank" class="text-blue-500 hover:underline">$1</a>');
 
+  return linkedText;
+};
+
+export const textToUser = (text: string) => {
+  const regexp_url = /@+([\w/:%#\$&\?\(\)~\.=\+\-]+)/g;
+  let linkedText = text.replace(regexp_url, '<a href="/user/$1" class="text-blue-500 hover:underline">@$1</a>');
+
+  return linkedText;
+};
 

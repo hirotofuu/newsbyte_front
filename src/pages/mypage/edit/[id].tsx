@@ -29,7 +29,7 @@ import {useUserState, useTokenState} from "./../../../hooks/useUser"
 import {Article} from "./../../../types/article";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const ID: any = context.params?.id;
-  const article: any = await getFunc(`/edit_article/${ID}`)
+  const article: Article = await getFunc(`/edit_article/${ID}`)
   console.log("hello")
   return{
     props: {
@@ -254,7 +254,7 @@ const create_under_save = () =>{
     }}
     size="small"
     />
-    <ul className="mt-2 flex gap-2 px-1">
+    <ul className="mt-2 flex gap-2 px-1 flex-row flex-wrap">
       {submitContent.tags_in.map((value, index)=>
       <li key={index}>
         <Chip
@@ -272,7 +272,7 @@ const create_under_save = () =>{
     <Container>
       <Box className="flex justify-between px-2 mt-8  w-full">
 
-        <h1 className="text-xl font-semibold">本文</h1>
+        <h1 className="text-xl font-semibold ">本文</h1>
 
 
           <button onClick={()=>setIsPreview(!isPreview)} className=" px-4 border-r-2   text-white bg-blue-500">{!isPreview ? "プレビューへ" : "編集へ戻る"}</button>

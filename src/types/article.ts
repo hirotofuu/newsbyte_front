@@ -9,6 +9,7 @@ export type Article={
   is_open_flag: boolean,
   tagss_out: string,
   name: string,
+  profile: string
   avatar: string,
   created_at: string,
   updated_at: string

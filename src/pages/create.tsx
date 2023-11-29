@@ -203,7 +203,7 @@ axios.
     }}
     size="small"
     />
-    <ul className="mt-2 flex gap-2 px-1">
+    <ul className="mt-2 flex gap-2 px-1 flex-row flex-wrap">
       {submitContent.tags_in.map((value, index)=>
       <li key={index}>
         <Chip
@@ -219,7 +219,7 @@ axios.
 
     </ul>
 
-    <Container>
+    <Container className="block sticky top-0">
       <Box className="flex justify-between px-2 mt-8  w-full">
 
         <h1 className="text-xl font-semibold">本文</h1>
