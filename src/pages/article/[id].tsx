@@ -21,6 +21,7 @@ import {
   Chip,
   Button
 } from "@mui/material";
+import Meta from "./../../components/factor/meta"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ArticletBar from "./../../components/factor/article_bar"
 import CommentChoice from "./../../components/choices/commentChoice"
@@ -169,6 +170,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
 
   return (
     <>
+      <Meta pageTitle={`${article.title}`} pageDesc={`${article.title}`}></Meta>
       <ArticletBar content={article.content} id_name={article.id_name} good={good} onDeleteGood={onGoodDelete} onGood={onGood}></ArticletBar>
       <Box className="flex p-4 mt-5">
         <LeftFrame>
@@ -256,7 +258,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
                     className="list-item list-none w-full text-left mb-2 pb-2 border-b hover:text-blue-500 "
                     onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                     >
-                    top 
+                    トップページへ 
                     </button>
                     <ReactMarkdown
                       allowedElements={["h1", "h2"]}

@@ -19,6 +19,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useUserState, useTokenState} from "./../hooks/useUser"
 import { useRouter } from 'next/router';
 
+import Meta from "./../components/factor/meta"
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -76,6 +78,7 @@ export default function SignIn() {
 
   return (
     <>
+    <Meta pageTitle={`ログイン`} pageDesc={`ログインページ`}></Meta>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -135,9 +138,7 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  パスワードを忘れた方
-                </Link>
+
               </Grid>
               <Grid item>
                 <Link href="/register" variant="body2">
@@ -147,7 +148,6 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
     </>

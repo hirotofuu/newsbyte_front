@@ -7,6 +7,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { Box } from '@mui/material';
 import Link from 'next/link';
 import { deletee } from '@/libs/deleteFunc';
+import Meta from "./../../components/factor/meta"
 import Frame from "./../../components/frame/frame"
 import axios from "./../../libs/axios"
 
@@ -49,6 +50,7 @@ const Mypage: NextPage = () => {
   useIsLogin()
   return (
     <>
+      <Meta pageTitle={`設定`} pageDesc={`設定ページ`}></Meta>  
       <Box>
         <Frame>
           <Box className="flex gap-4 p-4 mt-10">

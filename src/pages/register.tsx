@@ -20,6 +20,8 @@ import { useUserState, useTokenState } from '@/hooks/useUser';
 import { useRouter } from 'next/router';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import Meta from "./../components/factor/meta"
+
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -92,6 +94,7 @@ export default function SignIn() {
 
   return (
     <>
+    <Meta pageTitle={`アカウント作成`} pageDesc={`アカウント作成ページ`}></Meta>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -186,7 +189,6 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
     </>

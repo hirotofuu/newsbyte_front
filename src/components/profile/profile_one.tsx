@@ -60,7 +60,7 @@ export const ProfileOne:React.FC<Props>=({user, followed_num})=> {
           </h1>
           <p dangerouslySetInnerHTML={{
               __html: textToLink(user.profile ? `${user.profile}` : '')
-            }} className="ext-center text-xs"></p>
+            }} className="text-center text-xs"></p>
       </Frame>
      
     </>

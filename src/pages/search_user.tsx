@@ -13,6 +13,7 @@ import {
   CircularProgress,
   Box
 } from "@mui/material";
+import Meta from "./../components/factor/meta"
 import Frame from "./../components/frame/frame"
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const query: any = context.query.q;
@@ -37,6 +38,7 @@ const Search: NextPage<Factor> = ({query}) => {
   const router = useRouter()
   return (
     <>
+      <Meta pageTitle={`"${query}" のユーザー検索結果`} pageDesc={`"${query}"のユーザー検索結果`}></Meta>
       <Frame>
         <h1 className="text-2xl font-semibold mt-8">"{query}"の検索結果</h1>
         <Box className="mt-10">

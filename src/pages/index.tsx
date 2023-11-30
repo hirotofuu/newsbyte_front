@@ -18,7 +18,7 @@ import {
   Typography
 } from "@mui/material";
 
-
+import Meta from "./../components/factor/meta"
 
 export default function Home() {
   const defaultTheme = createTheme();
@@ -28,6 +28,7 @@ export default function Home() {
   
   return (
     <>
+      <Meta pageTitle={`newsbyte | Home`} pageDesc={`ホームページ`}></Meta>
       <ThemeProvider theme={defaultTheme}>
         <Box
           sx={{
@@ -64,7 +65,7 @@ export default function Home() {
                   pathname:"/search",   //URL
                   query: {q :searchWord} //検索クエリ
                   });
-                }}   className="p-1 border-1 border-black bg-gray-300 ml-1">記事を検索</button>
+                }}   className="p-1 border-1 border-black bg-gray-300 ml-1">検索</button>
               </section>
             </Container>
             <Box className="mt-8 mb-20 border-t-2 p-8">

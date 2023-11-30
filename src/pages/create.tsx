@@ -21,6 +21,7 @@ import remarkGfm from 'remark-gfm';
 import {useUserState, useTokenState} from "./../hooks/useUser" 
 import {deleteSpaceStr} from "./../libs/helper"
 import {useIsLogin} from "./../hooks/useRequireLogin"
+import Meta from "./../components/factor/meta"
 
 type submission = {
   title: string
@@ -63,8 +64,8 @@ export default function Create() {
     setValidation("タイトルは100文字未満に収めましょう")
     return ;
   }
-  if(submitContent.content.length>10000){
-    setValidation("本文は10000文字未満に収めましょう")
+  if(submitContent.content.length>20000){
+    setValidation("本文は20000文字未満に収めましょう")
     return ;
   }
 
@@ -137,6 +138,7 @@ axios.
 
   return(
     <>
+    <Meta pageTitle={`記事作成`} pageDesc={`記事の作成ページ`}></Meta>
     <header className="flex mt-2 px-2  w-full h-14">
       <div className="flex ml-auto mt-1 mr-3 gap-1">
         <button onClick={!submitContent.is_open_flag ? create_under_save : create} className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">{!submitContent.is_open_flag ? "下書き保存" : "公開保存"}</button>
@@ -187,13 +189,14 @@ axios.
     label="タグ"
     className="w-full px-1"
     id="tag"
-    placeholder="最大５つ　enterを押して確定"
+    placeholder="最大５つ　50字以内　enterを押して確定"
     value={tag}
     onChange={e => {
       setTag(e.target.value);
     }}
     onKeyDown={e => {
       if (e.keyCode === 13) {
+        if(tag.length>50)return; 
         if(deleteSpaceStr(tag) && submitContent.tags_in.length<5){
           submitContent.tags_in.push(deleteSpaceStr(tag))
           setTag("")

@@ -21,6 +21,7 @@ import {
   TextareaAutosize,
   Chip,
 } from "@mui/material";
+import Meta from "./../../../components/factor/meta"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import YoutArticletBar from "./../../../components/factor/your_article_bar"
 import YourCommentChoice from "./../../../components/choices/your_comment_choice"
@@ -140,6 +141,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
 
   return (
     <>
+      <Meta pageTitle={`${article.title} | admin`} pageDesc={`${article.title} | admin`}></Meta>
       <YoutArticletBar content={article.content} id={article.id} user_id={article.user_id} id_name={article.id_name} good={good} onDeleteGood={onGoodDelete} onGood={onGood}></YoutArticletBar>
       <Box className="flex p-4 mt-5">
         <LeftFrame>
@@ -167,7 +169,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
             </div>
             <Link  href={userState?.id != Number(article.user_id) ? `/user/${article.id_name}` : `/mypage/${userState?.id}`}>
               <div className="flex gap-2 mt-1">
-                  <h2 className="mt-1 font-semibold">{article.name}({article.id_name})</h2>
+                  <h2 className="mt-1 font-semibold">@{article.id_name}</h2>
               </div>
             </Link>
           </Box>
@@ -218,7 +220,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
                     className="list-item list-none w-full text-left mb-2 pb-2 border-b hover:text-blue-500 "
                     onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                     >
-                    top 
+                    トップページへ 
                     </button>
                     <ReactMarkdown
                       allowedElements={["h1", "h2"]}

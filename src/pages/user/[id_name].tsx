@@ -10,6 +10,7 @@ import UserABox from "./../../components/factor/user_article_bar"
 import Frame from '@/components/frame/frame';
 import ArticleChoice from "@/components/choices/articleChoice";
 import NotFoundItems from "./../../components/notFound/notFoundItems"
+import Meta from "./../../components/factor/meta"
 export const getStaticProps: GetStaticProps = async (context) => {
   const idName: any = context.params?.id_name;
   const user: User = await getFunc(`/one_id_name_user/${idName}`)
@@ -42,6 +43,7 @@ const Mypage: NextPage<Factor> = ({articles, user}) => {
   const {data: followed_user, error: followedError, mutate: followedMutate} = useFetch(`/followed_users/${user.id}`)
   return (
     <>
+      <Meta pageTitle={`ユーザー | ${user.id_name}`} pageDesc={`${user.id_name}のユーザーページ`}></Meta>
       <ProfileOne user={user} followed_num={followed_user ? followed_user.length : 0}></ProfileOne>
       <Box className="flex justify-center gap-12 mt-6 font-semibold border-b">
         <button className="pb-2 border-b-2 border-blue-500">記事</button>

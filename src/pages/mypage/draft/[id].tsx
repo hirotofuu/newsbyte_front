@@ -13,6 +13,7 @@ import {
   CircularProgress,
   Box
 } from "@mui/material";
+import Meta from "./../../../components/factor/meta"
 import ArticleIcon from '@mui/icons-material/Article';
 import CreateIcon from '@mui/icons-material/Create';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
@@ -85,6 +86,7 @@ const Mypage: NextPage<Factor> = ({userID}) => {
 
   return (
     <>
+      <Meta pageTitle={`マイページ`} pageDesc={`マイページ(下書き)`}></Meta>
       <Profile followed_num={followers ? followers.length: 0}></Profile>
       <Box className="flex justify-center gap-12 mt-6 font-semibold border-b">
         <button onClick={()=>{router.push(`/mypage/${userState?.id}`)}}  className="pb-2"><ArticleIcon></ArticleIcon></button>

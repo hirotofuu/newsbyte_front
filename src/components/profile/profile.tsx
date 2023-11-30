@@ -4,6 +4,7 @@ import {useUserState, useTokenState} from "../../hooks/useUser"
 import axios from "../../libs/axios"
 import { AxiosResponse, AxiosError } from 'axios';
 import { useRouter } from "next/router";
+import {textToLink} from "./../../libs/helper"
 import {
   Button
 } from "@mui/material";
@@ -52,7 +53,9 @@ export const Profile:React.FC<Props>=({followed_num})=> {
           <Button  color="secondary" className="" onClick={logout}>ログアウト</Button>
           </div>
           </h1>
-         <p className="text-center text-xs ">{userState?.profile}</p> 
+          <p dangerouslySetInnerHTML={{
+              __html: textToLink(userState ? `${userState.profile}` : '')
+            }} className="text-center text-xs"></p>
       </Frame>
      
     </>

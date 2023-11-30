@@ -4,6 +4,7 @@ import NotFoundItems from "./../../components/notFound/notFoundItems"
 import UserChoice from "@/components/choices/userChoice";
 import {useFetch} from "./../../hooks/useFetch"
 import { Box } from '@mui/material';
+import Meta from "./../../components/factor/meta"
 import Frame from "./../../components/frame/frame"
 
 export const getStaticProps: GetStaticProps = async (context) => {
@@ -36,6 +37,7 @@ const Search: NextPage<Factor> = ({id}) => {
   const {data: followed_user, error: followedError, mutate: followedMutate} = useFetch(`/followed_users/${id}`)
   return (
     <>
+      <Meta pageTitle={`フォロワー一覧 ${id}`} pageDesc={`フォロワー一覧 ${id}`}></Meta>
       <Frame>
         <Box className="flex justify-between p-3 mt-4 bg-gray-300">
           <button onClick={()=>{router.back()}} className="text-blue-500">戻る</button>

@@ -5,6 +5,7 @@ import {User} from "./../../types/user"
 import UserChoice from "@/components/choices/userChoice";
 import NotFoundItems from "./../../components/notFound/notFoundItems"
 import Frame from "./../../components/frame/frame"
+import Meta from "./../../components/factor/meta"
 import { Box } from '@mui/material';
 export const getStaticProps: GetStaticProps = async (context) => {
   const id: any = context.params?.id;
@@ -12,6 +13,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   return{
     props: {
       users: users,
+      id: id
     },
     revalidate: 120
   };
@@ -27,15 +29,17 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 type Factor = {
   users: User[]
+  id: any
 }
 
 
 
 
-const Search: NextPage<Factor> = ({users}) => {
+const Search: NextPage<Factor> = ({users, id}) => {
   const router = useRouter()
   return (
     <>
+      <Meta pageTitle={`フォロー中一覧 ${id}`} pageDesc={`フォロー中一覧 ${id}`}></Meta>
       <Frame>
         <Box className="flex justify-between p-3 mt-4 bg-gray-300">
           <button onClick={()=>{router.back()}} className="text-blue-500">戻る</button>

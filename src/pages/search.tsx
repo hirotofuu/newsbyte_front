@@ -12,6 +12,7 @@ import {
   Box
 } from "@mui/material";
 import Frame from "./../components/frame/frame"
+import Meta from "./../components/factor/meta"
 import { Article } from "@/types/article";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -38,6 +39,7 @@ const Search: NextPage<Factor> = ({query}) => {
 
   return (
     <>
+      <Meta pageTitle={`"${query}" の検索結果`} pageDesc={`"${query}"の検索結果`}></Meta>
       <Frame>
         <h1 className="text-2xl font-semibold mt-8">"{query}"の検索結果</h1>
         <Box className="mt-10">

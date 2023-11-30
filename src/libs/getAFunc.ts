@@ -5,23 +5,10 @@ const domain = 'http://localhost:8080';
 
 
 
-export async function getUserSaveArticle(userID: string){
-    const res=axios
-    .get(`/user_save_articles/${userID}`)
-    .then((response: AxiosResponse) => {
-      return response.data;
-    })
-    .catch((err: AxiosError) => console.log(err));
-    return res;
-}
-
-
 export async function getFunc(url: string){
     const res=axios
     .get(domain+url)
     .then((response: AxiosResponse) => {
-      console.log(response.data)
-      console.log("hello from the other side")
       return response.data;
     })
     .catch((err: AxiosError) => console.log(err));

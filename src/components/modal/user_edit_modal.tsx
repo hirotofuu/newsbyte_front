@@ -65,7 +65,7 @@
         return ;
       }
       if(submitContent.user_name == userState.user_name && submitContent.profile == userState.profile) {
-        router.push(`/mypage/${userState?.id}`)
+        setIsModal()
         return ;
       }
 

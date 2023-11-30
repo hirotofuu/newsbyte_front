@@ -22,7 +22,7 @@ import {
   Box,
   Container
 } from "@mui/material";
-
+import Meta from "./../../../components/factor/meta"
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
 import {useUserState, useTokenState} from "./../../../hooks/useUser" 
@@ -74,16 +74,6 @@ const EditPage: NextPage<Factor> = ({article}) => {
     comment_ok: article.comment_ok,
     is_open_flag: article.is_open_flag,
   })
-  const [firstContent, setFirstContent] = useState<submission>({
-    id: article.id,
-    title: article.title,
-    medium: article.medium,
-    tags_in: article.tagss_out!="{}" ? makeTags(article.tagss_out) : [],
-    content: article.content,
-    user_id:  Number(article.user_id),
-    comment_ok: article.comment_ok,
-    is_open_flag: article.is_open_flag,
-  })
   const [tag, setTag] = useState("")
 
 const create = () =>{
@@ -99,13 +89,6 @@ const create = () =>{
   }
   if(submitContent.content.length>10000){
     setValidation("本文は10000文字未満に収めましょう")
-    return ;
-  }
-
-  if(submitContent == firstContent){
-    setValidation("変化を加えないと編集はできません")
-    console.log(submitContent)
-    console.log(firstContent)
     return ;
   }
 
@@ -144,8 +127,8 @@ const create_under_save = () =>{
     setValidation("タイトルは100文字未満に収めましょう")
     return ;
   }
-  if(submitContent.content.length>10000){
-    setValidation("本文は10000文字未満に収めましょう")
+  if(submitContent.content.length>20000){
+    setValidation("本文は20000文字未満に収めましょう")
     return ;
   }
   if(!submitContent.content){
@@ -188,7 +171,8 @@ const create_under_save = () =>{
 
   return (
 <>
-    <header className="flex mt-2 px-2  w-full h-14">
+    <Meta pageTitle={`編集ページ`} pageDesc={`"${article.title}"の編集ページ`}></Meta>  
+    <Box className="flex mt-2 px-2  w-full h-14">
       <Box className="flex ml-auto mt-1 mr-3 gap-1">
         <button onClick={!submitContent.is_open_flag ? create_under_save : create} className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">{!submitContent.is_open_flag ? "下書き保存" : "公開保存"}</button>
         <Switch
@@ -197,7 +181,7 @@ const create_under_save = () =>{
         inputProps={{ 'aria-label': 'controlled' }}
         />
       </Box>
-    </header>
+    </Box>
     {validation ? <Alert className="m-4" variant="filled" severity="error">
       {validation}
     </Alert> : ""}
@@ -239,13 +223,14 @@ const create_under_save = () =>{
     label="タグ"
     className="w-full px-1"
     id="tag"
-    placeholder="最大５つ　enterを押して確定"
+    placeholder="最大５つ　50字以内　enterを押して確定"
     value={tag}
     onChange={e => {
       setTag(e.target.value);
     }}
     onKeyDown={e => {
       if (e.keyCode === 13) {
+        if(tag.length>50)return; 
         if(submitContent.tags_in.length<5){
           submitContent.tags_in.push(tag)
           setTag("")

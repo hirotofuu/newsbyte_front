@@ -10,6 +10,7 @@ import {User} from "../../../types/user"
 import {
   Box,
 } from "@mui/material";
+import Meta from "./../../../components/factor/meta"
 import Frame from "./../../../components/frame/frame"
 import CommentChoice from "@/components/choices/commentChoice";
 import NotFoundItems from "./../../../components/notFound/notFoundItems"
@@ -51,6 +52,7 @@ const Mypage: NextPage<Factor> = ({comments, user}) => {
   const router = useRouter()
   return (
     <>
+      <Meta pageTitle={`ユーザー | ${user.id_name}`} pageDesc={`${user.id_name}のユーザーページ(コメント)`}></Meta>
       <ProfileOne user={user} followed_num={followed_user ? followed_user.length : 0}></ProfileOne>
       <Box className="flex justify-center gap-12 mt-6 font-semibold border-b">
         <button className="pb-2" onClick={()=>{router.push(`/user/${user.id_name}`)}}>記事</button>
