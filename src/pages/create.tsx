@@ -1,7 +1,9 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, useMemo } from "react";
 import axios, { AxiosError, AxiosResponse }   from "axios"
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
+import SimpleMDE from "easymde";
+import ReactDOMServer from "react-dom/server";
 import {
   FormControl,
   InputLabel,
@@ -130,16 +132,12 @@ axios.
   const onChange = (value: any) => {
     SetSubmitContent({...submitContent, content:value});
   };
- 
-
-
-
 
 
   return(
     <>
     <Meta pageTitle={`記事作成`} pageDesc={`記事の作成ページ`}></Meta>
-    <header className="flex mt-2 px-2  w-full h-14">
+    <Box className="flex mt-2 px-2  w-full">
       <div className="flex ml-auto mt-1 mr-3 gap-1">
         <button onClick={!submitContent.is_open_flag ? create_under_save : create} className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">{!submitContent.is_open_flag ? "下書き保存" : "公開保存"}</button>
         <Switch
@@ -148,63 +146,70 @@ axios.
         inputProps={{ 'aria-label': 'controlled' }}
         />
       </div>
-    </header>
+    </Box>
     {validation ? <Alert className="m-4" variant="filled" severity="error">
       {validation}
     </Alert> : ""}
-    <TextField
-    label="タイトル"
-    className="w-full px-1 mb-3"
-    id="title"
-    name="title"
-    placeholder="最大100文字"
-    size="small"
-    value={submitContent.title}
-    onChange={e => {
-      SetSubmitContent({...submitContent, title:e.target.value});
-    }}
-    />
-    <FormControl fullWidth className="px-1 mb-3" size="small">
-      <InputLabel>媒体</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="medium"
-        label="媒体"
-        value={submitContent.medium}
-        onChange={e => {
-          SetSubmitContent({...submitContent, medium:Number(e.target.value)});
-        }}
-      >
-        <MenuItem value={1}>漫画</MenuItem>
-        <MenuItem value={2}>漫画雑誌</MenuItem>
-        <MenuItem value={3}>アニメ</MenuItem>
-        <MenuItem value={4}>ラノベ</MenuItem>
-        <MenuItem value={5}>映画</MenuItem>
-        <MenuItem value={6}>ドラマ</MenuItem>
-        <MenuItem value={7}>小説</MenuItem>
-        <MenuItem value={8}>ゲーム</MenuItem>
-      </Select>
-    </FormControl>
-    <TextField
-    label="タグ"
-    className="w-full px-1"
-    id="tag"
-    placeholder="最大５つ　50字以内　enterを押して確定"
-    value={tag}
-    onChange={e => {
-      setTag(e.target.value);
-    }}
-    onKeyDown={e => {
-      if (e.keyCode === 13) {
-        if(tag.length>50)return; 
-        if(deleteSpaceStr(tag) && submitContent.tags_in.length<5){
-          submitContent.tags_in.push(deleteSpaceStr(tag))
-          setTag("")
+    <Box className="mb-3">
+      <TextField
+      className="w-full px-1"
+      label="タイトル"
+      id="title"
+      name="title"
+      placeholder="最大100文字"
+      size="small"
+      value={submitContent.title}
+      onChange={e => {
+        SetSubmitContent({...submitContent, title:e.target.value});
+      }}
+      />
+     <p className="text-xs px-2">({tag.length}/100)</p>
+    </Box>
+    <Box>
+      <FormControl fullWidth className="px-1 mb-3" size="small">
+        <Select
+          labelId="demo-simple-select-label"
+          label="媒体"
+          id="medium"
+          value={submitContent.medium}
+          onChange={e => {
+            SetSubmitContent({...submitContent, medium:Number(e.target.value)});
+          }}
+        >
+          <MenuItem value={1}>漫画</MenuItem>
+          <MenuItem value={2}>漫画雑誌</MenuItem>
+          <MenuItem value={3}>アニメ</MenuItem>
+          <MenuItem value={4}>ラノベ</MenuItem>
+          <MenuItem value={5}>映画</MenuItem>
+          <MenuItem value={6}>ドラマ</MenuItem>
+          <MenuItem value={7}>小説</MenuItem>
+          <MenuItem value={8}>ゲーム</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+    <Box>
+      <TextField
+      className="w-full px-1"
+      id="tag"
+      label="タグ"
+      placeholder="最大５つ　50字以内　enterを押して確定"
+      value={tag}
+      onChange={e => {
+        setTag(e.target.value);
+      }}
+      onKeyDown={e => {
+        if (e.keyCode === 13) {
+          if(tag.length>50)return; 
+          if(deleteSpaceStr(tag) && submitContent.tags_in.length<5){
+            submitContent.tags_in.push(deleteSpaceStr(tag))
+            setTag("")
+          }
         }
-      }
-    }}
-    size="small"
-    />
+      }}
+      size="small"
+      />
+      <p className="text-xs px-2">({tag.length}/50)</p>
+    </Box>
     <ul className="mt-2 flex gap-2 px-1 flex-row flex-wrap">
       {submitContent.tags_in.map((value, index)=>
       <li key={index}>
@@ -221,10 +226,10 @@ axios.
 
     </ul>
 
-    <Container className="block sticky top-0">
-      <Box className="flex justify-between px-2 mt-8  w-full">
+    <Container>
+      <Box className="flex justify-between px-2 mt-2  w-full">
 
-        <h1 className="text-xl font-semibold">本文</h1>
+        <h1 className="text-xl font-semibold ">本文</h1>
 
 
           <button onClick={()=>setIsPreview(!isPreview)} className=" px-4 border-r-2   text-white bg-blue-500">{!isPreview ? "プレビューへ" : "編集へ戻る"}</button>

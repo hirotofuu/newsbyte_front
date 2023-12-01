@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { NextPage, GetServerSideProps } from 'next';
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { getFunc } from "@/libs/getAFunc";
 import { AxiosError, AxiosResponse } from 'axios';
 import { useRouter } from "next/router";
 import {makeTags} from "./../../../libs/helper"
 import "easymde/dist/easymde.min.css";
+
 import dynamic from "next/dynamic";
 import {useFetch} from "./../../../hooks/useFetch"
 import {useRequireLogin} from "../../../hooks/useRequireLogin"
@@ -185,60 +186,68 @@ const create_under_save = () =>{
     {validation ? <Alert className="m-4" variant="filled" severity="error">
       {validation}
     </Alert> : ""}
-    <TextField
-    label="タイトル"
-    className="w-full px-1 mb-3"
-    id="title"
-    name="title"
-    placeholder="最大100文字"
-    size="small"
-    value={submitContent.title}
-    onChange={e => {
-      SetSubmitContent({...submitContent, title:e.target.value});
-    }}
-    />
-    <FormControl fullWidth className="px-1 mb-3" size="small">
-      <InputLabel>媒体</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="medium"
-        label="媒体"
-        value={submitContent.medium}
-        onChange={e => {
-          SetSubmitContent({...submitContent, medium:Number(e.target.value)});
-        }}
-      >
-        <MenuItem value={0}></MenuItem>
-        <MenuItem value={1}>漫画</MenuItem>
-        <MenuItem value={2}>漫画雑誌</MenuItem>
-        <MenuItem value={3}>アニメ</MenuItem>
-        <MenuItem value={4}>ラノベ</MenuItem>
-        <MenuItem value={5}>映画</MenuItem>
-        <MenuItem value={6}>ドラマ</MenuItem>
-        <MenuItem value={7}>小説</MenuItem>
-        <MenuItem value={8}>ゲーム</MenuItem>
-      </Select>
-    </FormControl>
-    <TextField
-    label="タグ"
-    className="w-full px-1"
-    id="tag"
-    placeholder="最大５つ　50字以内　enterを押して確定"
-    value={tag}
-    onChange={e => {
-      setTag(e.target.value);
-    }}
-    onKeyDown={e => {
-      if (e.keyCode === 13) {
-        if(tag.length>50)return; 
-        if(submitContent.tags_in.length<5){
-          submitContent.tags_in.push(tag)
-          setTag("")
+    <Box className="mb-3">
+      <TextField
+      label="タイトル"
+      className="w-full px-1"
+      id="title"
+      name="title"
+      placeholder="最大100文字"
+      size="small"
+      value={submitContent.title}
+      onChange={e => {
+        SetSubmitContent({...submitContent, title:e.target.value});
+      }}
+      />
+      <p className="text-xs px-2">({submitContent.title.length}/100)</p>
+    </Box>
+    <Box>
+      <FormControl fullWidth className="px-1 mb-3" size="small">
+        <InputLabel>媒体</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="medium"
+          label="媒体"
+          value={submitContent.medium}
+          onChange={e => {
+            SetSubmitContent({...submitContent, medium:Number(e.target.value)});
+          }}
+        >
+          <MenuItem value={0}></MenuItem>
+          <MenuItem value={1}>漫画</MenuItem>
+          <MenuItem value={2}>漫画雑誌</MenuItem>
+          <MenuItem value={3}>アニメ</MenuItem>
+          <MenuItem value={4}>ラノベ</MenuItem>
+          <MenuItem value={5}>映画</MenuItem>
+          <MenuItem value={6}>ドラマ</MenuItem>
+          <MenuItem value={7}>小説</MenuItem>
+          <MenuItem value={8}>ゲーム</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+    <Box>
+      <TextField
+      label="タグ"
+      className="w-full px-1"
+      id="tag"
+      placeholder="最大５つ　50字以内　enterを押して確定"
+      value={tag}
+      onChange={e => {
+        setTag(e.target.value);
+      }}
+      onKeyDown={e => {
+        if (e.keyCode === 13) {
+          if(tag.length>50)return; 
+          if(submitContent.tags_in.length<5){
+            submitContent.tags_in.push(tag)
+            setTag("")
+          }
         }
-      }
-    }}
-    size="small"
-    />
+      }}
+      size="small"
+      />
+      <p className="text-xs px-2">({tag.length}/50)</p>
+    </Box>
     <ul className="mt-2 flex gap-2 px-1 flex-row flex-wrap">
       {submitContent.tags_in.map((value, index)=>
       <li key={index}>
