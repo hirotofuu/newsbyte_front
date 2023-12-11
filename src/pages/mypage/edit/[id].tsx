@@ -6,11 +6,12 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { useRouter } from "next/router";
 import {makeTags} from "./../../../libs/helper"
 import "easymde/dist/easymde.min.css";
-
+import {deleteSpaceStr} from "./../../../libs/helper"
 import dynamic from "next/dynamic";
 import {useFetch} from "./../../../hooks/useFetch"
 import {useRequireLogin} from "../../../hooks/useRequireLogin"
 import axios from "./../../../libs/axios"
+import {deletee} from '@/libs/deleteFunc'
 import {
   FormControl,
   InputLabel,
@@ -63,7 +64,7 @@ const EditPage: NextPage<Factor> = ({article}) => {
   const [isPreview, setIsPreview] = useState(false);
   const [validation, setValidation] = useState("");
   const router = useRouter()
-  const {mutate: DAmutation} = useFetch(`/user_save_articles/${article.user_id}`)
+  const {mutate: DAmutation} = useFetch(`/user_save_articles`)
   const {mutate: Amutation} = useFetch(`/user_articles/${article.user_id}`)
   const [submitContent, SetSubmitContent] = useState<submission>({
     id: article.id,
@@ -168,6 +169,25 @@ const create_under_save = () =>{
     SetSubmitContent({...submitContent, content:value});
   };
 
+  const deleteComment = async() => {
+    if(!userState)return
+    const result = confirm("本当に削除しますか？")
+    if (!result) {
+      return;
+    }
+    let res: number = await deletee(`/user/delete_articles/${article?.id}`, TokenState ? TokenState : " ")
+    if (res==1){
+      router.push(`/mypage/${userState.id}`)
+      if(article.is_open_flag){
+        Amutation()
+      }else{
+        DAmutation()
+      }
+    }else{
+      setValidation("サーバーないでエラーが起きました")
+    }
+  }
+
   useRequireLogin(article.user_id);
 
   return (
@@ -238,8 +258,8 @@ const create_under_save = () =>{
       onKeyDown={e => {
         if (e.keyCode === 13) {
           if(tag.length>50)return; 
-          if(submitContent.tags_in.length<5){
-            submitContent.tags_in.push(tag)
+          if(deleteSpaceStr(tag) && submitContent.tags_in.length<5){
+            submitContent.tags_in.push(deleteSpaceStr(tag))
             setTag("")
           }
         }
@@ -261,10 +281,17 @@ const create_under_save = () =>{
       />
       </li>
       )}
-
     </ul>
     <Container>
-      <Box className="flex justify-between px-2 mt-8  w-full">
+    <Box className="px-1 my-4">
+      <h1 className="font-semibold mb-1">コメントを公開する</h1>
+      <Switch
+        checked={submitContent.comment_ok}
+        onChange={ ()=> SetSubmitContent({...submitContent, comment_ok: !submitContent.comment_ok})}
+        inputProps={{ 'aria-label': 'controlled' }}
+      />
+    </Box>
+      <Box className="flex justify-between px-2  w-full">
 
         <h1 className="text-xl font-semibold ">本文</h1>
 
@@ -278,6 +305,9 @@ const create_under_save = () =>{
         <ReactMarkdown remarkPlugins={[remarkGfm]} className='markdown mt-3'>{submitContent.content}</ReactMarkdown>  
       </>
       }
+      <Box className="flex justify-end mt-6 mb-10 mr-3 gap-1">
+          <button onClick={deleteComment} className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-red-500">削除する</button>
+      </Box>
     </Container>
     </>
   );

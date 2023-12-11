@@ -213,25 +213,27 @@ const Mypage: NextPage<Factor> = ({article}) => {
             </button>
           </Box>
           <Box className="p-5 mb-20">
-            <label className="text-sm mb-2 font font-semibold">コメント欄({comments ? comments.length : 0})</label>
-            {comments ?
-              comments.map((comment: Comment, index: number)=>{
-                return (
-                  <CommentChoice comment={comment} onReply={onReply} key={index}></CommentChoice>
-                )
-              })
-            : <NotFoundItems></NotFoundItems>}
-            <TextareaAutosize
-            className="mt-4 block border-2 w-full resize-none p-1 rounded-md"
-            aria-label="comment"
-            value={commentForm.comment}
-            onChange={e => {
-              setCommentForm({...commentForm, comment:e.target.value});
-            }}
-            placeholder="コメントを書く" />
-            { userState ? <div className="flex justify-end">
-              <button className="m-1 text-sm  text-gray-600 px-2 border-2 bg-gray-100 rounded-full" onClick={onSendComment}>send</button>
-            </div> : <p>コメントにはログインが必要です</p>} 
+            <label className="text-sm mb-2 font font-semibold">コメント欄({article.comment_ok ? comments ? comments.length : 0 : "閉鎖中"})</label>
+            {article.comment_ok ? <Box>
+              {comments ?
+                comments.map((comment: Comment, index: number)=>{
+                  return (
+                    <CommentChoice comment={comment} onReply={onReply} key={index}></CommentChoice>
+                  )
+                })
+              : <NotFoundItems></NotFoundItems>}
+              <TextareaAutosize
+              className="mt-4 block border-2 w-full resize-none p-1 rounded-md"
+              aria-label="comment"
+              value={commentForm.comment}
+              onChange={e => {
+                setCommentForm({...commentForm, comment:e.target.value});
+              }}
+              placeholder="コメントを書く" />
+              { userState ? <div className="flex justify-end">
+                <button className="m-1 text-sm  text-gray-600 px-2 border-2 bg-gray-100 rounded-full" onClick={onSendComment}>send</button>
+              </div> : <p>コメントには<Link className="text-blue-500" href="/login">ログイン</Link>が必要です</p>} 
+            </Box> : <p className="mt-6">このコメント欄は解放されていません</p>}
           </Box>
 
         </LeftFrame>

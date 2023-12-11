@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getFunc } from '@/libs/getAFunc';
 import { Article } from "./../types/article"
 import { useFetch } from '@/hooks/useFetch';
+import { useUserState } from '@/hooks/useUser';
 import ArticleChoice from "./../components/choices/articleChoice"
 import {
   Container,
@@ -24,7 +25,25 @@ export default function Home() {
   const defaultTheme = createTheme();
   const [searchWord, setSearchWord] = useState("")
   const {data: A, error: Aerror, mutate: Amutation} = useFetch(`/articles`)
+  const {userState} = useUserState()
   const router = useRouter()
+
+  if(userState) return (
+    <>
+    <Box className="mt-8 mb-20 p-8">
+      <Frame>
+        <h1 className="font-bold mb-4">一覧</h1>
+        { A ?
+        A.map((article: Article, index: number)=>{
+          return (
+            <ArticleChoice article={article} key={index}></ArticleChoice>
+          )
+        })
+        : ""}
+      </Frame>
+    </Box>
+    </>
+  )
   
   return (
     <>
@@ -92,7 +111,7 @@ export default function Home() {
                     : theme.palette.grey[800],
               }}
             >
-            </Box>
+           </Box>
         </Box>
       </ThemeProvider>
     </>

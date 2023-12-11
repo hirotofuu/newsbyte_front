@@ -26,6 +26,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import YoutArticletBar from "./../../../components/factor/your_article_bar"
 import YourCommentChoice from "./../../../components/choices/your_comment_choice"
 import NotFoundItems from "./../../../components/notFound/notFoundItems"
+import { Span } from "next/dist/trace";
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -93,6 +94,8 @@ type CommentForm = {
 const Mypage: NextPage<Factor> = ({article}) => {
   const {data: good, error: goodError, mutate: goodMutate} = useFetch(`/good_article/${article.id}`)
   const {data: comments, error: commentError, mutate: commentMutate} = useFetch(`/article_comments/${article.id}`)
+  const {mutate: DAmutation} = useFetch(`/user_save_articles`)
+  const {mutate: Amutation} = useFetch(`/user_articles/${article.user_id}`)
   const {userState, setUserState} = useUserState()
   const {TokenState} = useTokenState()
   const [commentForm, setCommentForm] = useState<CommentForm>({
@@ -134,6 +137,25 @@ const Mypage: NextPage<Factor> = ({article}) => {
     var element = document.documentElement;
     var bottom = element.scrollHeight - element.clientHeight;
     window.scroll(0, bottom);
+  }
+
+  const deleteArticle = async() => {
+    if(!userState)return
+    const result = confirm("本当に削除しますか？")
+    if (!result) {
+      return;
+    }
+    let res: number = await deletee(`/user/delete_articles/${article?.id}`, TokenState ? TokenState : " ")
+    if (res==1){
+      router.push(`/mypage/${userState.id}`)
+      if(article.is_open_flag){
+        Amutation()
+      }else{
+        DAmutation()
+      }
+    }else{
+      console.log("サーバーないでエラーが起きました")
+    }
   }
 
   useRequireLogin(article.user_id)
@@ -184,7 +206,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
             </button>
           </Box>
           <Box className="p-5 mb-20">
-            <label className="text-sm mb-2 font font-semibold">コメント欄({comments ? comments.length : 0})</label>
+            <label className="text-sm mb-2 font font-semibold">コメント欄({article.comment_ok ? comments ? comments.length : 0 : <span className="text-red-400">閉鎖中</span>})</label>
             {comments ?
               comments.map((comment: Comment, index: number)=>{
                 return (
@@ -211,6 +233,7 @@ const Mypage: NextPage<Factor> = ({article}) => {
             <Box className="p-4 rounded-md bg-gray-100">
                 <Link className="block hover:text-blue-500" href={`/mypage/${userState?.id}`}>マイページ</Link>
                 <Link className="block hover:text-blue-500" href={`/mypage/edit/${article.id}`}>編集</Link>
+                <button onClick={deleteArticle} className="block hover:text-red-500">削除する</button>
             </Box>
             <Box className="mt-8">
               <Box className="p-3 bg-gray-100 rounded-md overflow-auto max-h-96">

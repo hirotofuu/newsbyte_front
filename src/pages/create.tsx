@@ -138,7 +138,7 @@ axios.
     <>
     <Meta pageTitle={`記事作成`} pageDesc={`記事の作成ページ`}></Meta>
     <Box className="flex mt-2 px-2  w-full">
-      <div className="flex ml-auto mt-1 mr-3 gap-1">
+      <div className="flex ml-auto mt-1 mb-2 mr-3 gap-1">
         <button onClick={!submitContent.is_open_flag ? create_under_save : create} className="py-2 px-4 h-10 rounded-full font-semibold text-white bg-blue-700">{!submitContent.is_open_flag ? "下書き保存" : "公開保存"}</button>
         <Switch
         checked={submitContent.is_open_flag}
@@ -163,7 +163,7 @@ axios.
         SetSubmitContent({...submitContent, title:e.target.value});
       }}
       />
-     <p className="text-xs px-2">({tag.length}/100)</p>
+     <p className="text-xs px-2">({submitContent.title.length}/100)</p>
     </Box>
     <Box>
       <FormControl fullWidth className="px-1 mb-3" size="small">
@@ -227,6 +227,14 @@ axios.
     </ul>
 
     <Container>
+      <Box className="px-1 my-4">
+        <h1 className="font-semibold mb-1">コメントを公開する</h1>
+        <Switch
+          checked={submitContent.comment_ok}
+          onChange={ ()=> SetSubmitContent({...submitContent, comment_ok: !submitContent.comment_ok})}
+          inputProps={{ 'aria-label': 'controlled' }}
+        />
+      </Box>
       <Box className="flex justify-between px-2 mt-2  w-full">
 
         <h1 className="text-xl font-semibold ">本文</h1>
