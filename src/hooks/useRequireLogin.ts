@@ -1,6 +1,9 @@
 import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/router";
 import { useUserState } from "./useUser"
+
+// ユーザーがログインしているか、していたら遷移ようフック
+
 export function useRequireLogin(userID: number) {
   const { userState, isAuthChecking } = useUserState();
   const router = useRouter();

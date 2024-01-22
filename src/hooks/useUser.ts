@@ -1,6 +1,8 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { currentUserState, tokenState } from '../atoms/userAtom'
 
+// recoil用ユーザー、トークン情報操作用フック
+
 export function useUserState() {
   const userState = useRecoilValue(currentUserState);
   const setUserState = useSetRecoilState(currentUserState);
