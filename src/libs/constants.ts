@@ -1,3 +1,5 @@
+// metaの共通要素
+
 export const siteMeta={
   siteTitle: 'newsbyte',
   siteDesc: 'このサイトはブログ投稿サイトです',

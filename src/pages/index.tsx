@@ -27,7 +27,6 @@ export default function Home() {
   const {data: A, error: Aerror, mutate: Amutation} = useFetch(`/articles`)
   const {userState} = useUserState()
   const router = useRouter()
-
   if(userState) return (
     <>
     <Box className="mt-8 mb-20 p-8">

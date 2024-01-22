@@ -1,7 +1,8 @@
 import Axios from 'axios'
 
+
 const axios = Axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: `${process.env.NEXT_PUBLIC_APP_BACKEND}`,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/json'

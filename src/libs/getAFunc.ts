@@ -1,13 +1,12 @@
 import axios from './axios';
 import { AxiosError, AxiosResponse } from 'axios';
 
-const domain = 'http://localhost:8080';
-
+// get用の外部通信用関数
 
 
 export async function getFunc(url: string){
     const res=axios
-    .get(domain+url)
+    .get(`${process.env.NEXT_PUBLIC_APP_BACKEND}`+url)
     .then((response: AxiosResponse) => {
       return response.data;
     })
@@ -22,7 +21,7 @@ export async function getTokenFunc(url: string, token: string){
     'Authorization': token ? "Bearer " + token : "",
 }
 
-  const res=axios.get(domain + url ,{headers: headers, withCredentials: true })
+  const res=axios.get(`${process.env.NEXT_PUBLIC_APP_BACKEND}` + url ,{headers: headers, withCredentials: true })
   .then((response: AxiosResponse) => {
     return response.data
   })
@@ -38,7 +37,7 @@ export async function getSearch(url: string, word: string){
     'X-Requested-With': 'XMLHttpRequest',
 }
 
-  const res=axios.get(domain + url ,{
+  const res=axios.get(`${process.env.NEXT_PUBLIC_APP_BACKEND}` + url ,{
   headers: headers,  
   params: {
     q: word

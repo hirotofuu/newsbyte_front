@@ -8,9 +8,14 @@ import { useRouter } from "next/router";
 import {
   Chip,
 } from "@mui/material";
+
+// 管理者権限があるユーザーが使う記事選択肢
+
 type Props ={
   article: Article | null
 };
+
+
 
 const EArticleChoice: React.FC<Props> =React.memo(({article})=>{
   const [tags] = useState(makeTags(article ? article?.tagss_out : "{}"))

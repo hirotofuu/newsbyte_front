@@ -1,3 +1,5 @@
+// ユーザー用の型
+
 export type User={
   avatar_image: string,
   email: string,

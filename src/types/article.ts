@@ -1,3 +1,5 @@
+// 記事、コメント用の型
+
 export type Article={
   id: number,
   content: string,

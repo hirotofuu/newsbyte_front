@@ -2,6 +2,8 @@ import { formatDistance, format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { useRouter } from "next/router";
 
+// 時間表示関数
+
 export function timee(date: string) {
   let time = formatDistance(new Date(), Date.parse(date), {
     locale: ja,
@@ -18,12 +20,17 @@ export function timee(date: string) {
   return time
 }
 
+// タグのパース関数
+
 export function makeTags(data: string) {
   let result
   result = data.replace("{", "")
   result = result.replace("}", "")
   return result.split(',')
 }
+
+
+// スペース削除関数
 
 export function deleteSpaceStr(data: string){
   let result = data
@@ -32,6 +39,7 @@ export function deleteSpaceStr(data: string){
   return result
 }
 
+// リンクを青文字、aタグ化する関数
 
 export const textToLink = (text: string) => {
   const regexp_url = /(https?:\/\/[\w/:%#\$&\?\(\)~\.=\+\-]+)/g;
@@ -39,6 +47,8 @@ export const textToLink = (text: string) => {
 
   return linkedText;
 };
+
+// ＠をリンクかする関数
 
 export const textToUser = (text: string) => {
   const regexp_url = /@+([\w/:%#\$&\?\(\)~\.=\+\-]+)/g;

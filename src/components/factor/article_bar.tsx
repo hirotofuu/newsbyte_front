@@ -12,6 +12,8 @@ import {
  import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
  import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
+ 
+
  type good = {
   is_good_flag: boolean
   good_num: number

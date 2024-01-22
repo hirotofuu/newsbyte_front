@@ -1,6 +1,8 @@
 import axios from "axios";
 import { AxiosError, AxiosResponse } from 'axios';
 
+// 削除の外部通信関数
+
 export async function deletee(url: string, token?: string) {
   const headers = {
     'Content-Type': 'application/json',
@@ -8,7 +10,7 @@ export async function deletee(url: string, token?: string) {
     'Authorization': token ? "Bearer " + token : "",
 }
 
-  const res=axios.delete('http://localhost:8080' + url ,{headers: headers, withCredentials: true })
+  const res=axios.delete(`${process.env.NEXT_PUBLIC_APP_BACKEND}` + url ,{headers: headers, withCredentials: true })
   .then((response: AxiosResponse) => {
     return 1
   })

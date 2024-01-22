@@ -7,6 +7,9 @@ import {textToUser} from "./../../libs/helper"
 import Link from 'next/link';
 import { Box } from '@mui/material'
 
+// コメントのコンポーネント
+
+
 type Props ={
   comment: Comment | null
   onReply?: (id_name: string) => void 

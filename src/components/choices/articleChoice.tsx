@@ -10,6 +10,9 @@ import {
   Chip,
   Box
 } from "@mui/material";
+
+// 記事の選択肢のコンポーネント
+
 type Props ={
   article: Article | null
 }

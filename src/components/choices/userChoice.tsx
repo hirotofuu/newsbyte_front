@@ -7,6 +7,9 @@ import { deletee } from "@/libs/deleteFunc";
 import {User} from "./../../types/user"
 import FollowButton from "./../button/folllowButton"
 
+
+// ユーザー選択肢のコンポーネント
+
 type Props ={
   user: User | null
 }
@@ -36,6 +39,8 @@ const UserChoice:React.FC<Props> =React.memo(({user})=>{
       setUserState({...userState, following_user_ids: demo})
     }
   }
+
+
 
 
   return(

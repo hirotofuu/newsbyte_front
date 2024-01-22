@@ -1,3 +1,4 @@
+// ボタンのコンポーネント
 
 type Props = {
   onClick : VoidFunction

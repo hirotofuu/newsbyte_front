@@ -119,7 +119,7 @@ const create_under_save = () =>{
 }
 
 axios.
-  put("http://localhost:8080/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
+  put(`${process.env.NEXT_PUBLIC_APP_BACKEND}`+"/user/insert_article", JSON.stringify(submitContent), {headers: headers, withCredentials: true }, )
   .then((res: AxiosResponse) => {
     DAmutation()
     router.push(`/mypage/draft/${userState?.id}`)

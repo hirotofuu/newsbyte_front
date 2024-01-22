@@ -1,6 +1,7 @@
 import { atom, useRecoilState } from 'recoil';
 import { User } from '../types/user'; 
 
+// recoilのatom
 
 
 export const currentUserState = atom< null | User>({
