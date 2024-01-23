@@ -1,3 +1,5 @@
+/* markdownデザイン、tailwind 追加 */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
